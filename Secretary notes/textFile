@@ -1,11 +1,21 @@
 Frånvarande: Anna-Maria Månsson (ingen anledning)
 
 Möte klockan 10 på morgonen varje dag (kan ändras):
+På onsdagar möte efter lunch klockan 13:00:
+
+Roles Vecka 1:
+Hussein: Sekreterare
+Vehid: Scrum Master
+Moris: Developer
+
+Typ av chat:
+Gruppchat
 
 Ramverk för GUi:
 JavaFX GUI
 
 Uppkoppling:
+Server socket
 
 Encryptering:
 
@@ -15,13 +25,16 @@ Vart ska det lagras?
 CSV format?
 
 Vehid ansvar:
-?
+Skapa server
 
 Moris ansvar:
-?
+Gör GUI
 
 Hussein ansvar:
-?
+Databas
+Alla text meddelanden ska sparas i databas, sparas i en fil.
+Databas model:
+timestap, username och meddelanded.
 
 User1 story:
 Jag vill se att personen skriver.
@@ -40,3 +53,13 @@ Jag vill skicka emojis.
 
 User6 Story:
 Jag vill skicka gifs.
+
+Fil struktur:
+Gui är på main eftersom den är lightweight
+Har en model som är då User
+Har en fil för server
+
+Increment 1:
+GUI: GUI ska kunna skicka meddelande, 
+Server: Försöka koppla websocket
+Databas: Förbereda databas
