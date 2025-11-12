@@ -14,7 +14,7 @@ public class MessageRepository implements IMessageRepository {
     public void saveMessage(TextNode message) {
         String fileName = file.getName();
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
 
             String content = message.getContent();
             String username = message.getUsername();
