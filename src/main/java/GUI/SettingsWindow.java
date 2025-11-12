@@ -3,6 +3,7 @@ package GUI;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -52,9 +53,10 @@ public class SettingsWindow {
 
         // Button click
         button.setOnAction(x -> {
-            try {
+            if (username.getText().isEmpty()) new Alert(Alert.AlertType.ERROR, "Username missing.").showAndWait();
+            try { // Try-catch block för parsing, kan brytas ut till fler om man vill
                 String[] ipPort = ipAddress.getText().split(":");
-                int ip = Integer.parseInt(ipPort[0]);
+                String ip = ipPort[0];
                 int port = Integer.parseInt(ipPort[1]);
                 user = new UserSession(username.getText(), group.getText(), ip, port);
                 windowManager.showChat(user);
