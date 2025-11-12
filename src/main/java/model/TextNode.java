@@ -18,4 +18,9 @@ public class TextNode extends Text {
         setText("[" + timestamp.format(DateTimeFormatter.ofPattern("dd MMM HH:mm")) + "] " + username + ": " + content + "\n");
 
     }
+
+    // Lägde getters eftersom jag vill skriva fälterna till databasen
+    public String getContent() { return content; }
+    public String getUsername() { return username; }
+    public LocalDateTime getTimestamp() { return timestamp; }
 }
