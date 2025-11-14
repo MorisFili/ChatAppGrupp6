@@ -1,4 +1,4 @@
-Frånvarande: Anna-Maria Månsson (ingen anledning) 2025-11-10, 2025-11-11, 2025-11-13
+Frånvarande: Anna-Maria Månsson (ingen anledning) 2025-11-10, 2025-11-11, 2025-11-13, 2025-11-14
 
 Möte klockan 10 på morgonen varje dag (kan ändras):
 På onsdagar möte efter lunch klockan 13:00:
@@ -7,6 +7,11 @@ Roles Vecka 1:
 Hussein: Sekreterare
 Vehid: Scrum Master
 Moris: Developer
+
+Roles Vecka 2:
+Hussein: Scrum Master
+Vehid: Developer
+Moris: Sekreterare
 
 Typ av chat:
 Gruppchat
@@ -23,6 +28,9 @@ Lagras:
 Hur ska det lagras?
 Vart ska det lagras?
 CSV format?
+
+Databas:
+Enkel text file
 
 Vehid ansvar:
 Skapa server
@@ -54,6 +62,12 @@ Jag vill skicka emojis.
 User6 Story:
 Jag vill skicka gifs.
 
+User7 Story:
+Jag vill ta bort meddelanden.
+
+User8 Story:
+Jag vill redigera mitt meddalanden.
+
 Fil struktur:
 Gui är på main eftersom den är lightweight
 Har en model som är då User
@@ -61,5 +75,12 @@ Har en fil för server
 
 Increment 1:
 GUI: GUI ska kunna skicka meddelande, 
-Server: Försöka koppla websocket
+Server: Försöka koppla till socket
 Databas: Förbereda databas
+
+Har vi nått increment?
+GUIn kan skicka meddelanden men inget händer i backend än.
+Servern är igång.
+Databasen är förbered, den kan spara och tar bort meddelande.
+
+Increment 2:
