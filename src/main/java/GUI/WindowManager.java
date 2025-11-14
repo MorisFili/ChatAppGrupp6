@@ -23,6 +23,7 @@ public class WindowManager {
         chatWindow.setUser(session);
         stage.setTitle("Chat session - " + session.getUsername());
         stage.setScene(chatWindow.getScene());
+
     }
 
 }
