@@ -18,4 +18,13 @@ public class TextNode extends Text {
         setText("[" + timestamp.format(DateTimeFormatter.ofPattern("dd MMM HH:mm")) + "] " + username + ": " + content + "\n");
 
     }
+
+    public String serializeMSG(){
+        return "MSG:" + username + "|" + content;
+    }
+
+    public static TextNode deserializeMSG(String msg) {
+        String[] p = msg.substring(4).split("\\|");
+        return new TextNode(p[0], LocalDateTime.now(), p[1]);
+    }
 }
