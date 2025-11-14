@@ -19,6 +19,11 @@ public class TextNode extends Text {
 
     }
 
+    // Lägde getters eftersom jag vill skriva fälterna till databasen
+    public String getContent() { return content; }
+    public String getUsername() { return username; }
+    public LocalDateTime getTimestamp() { return timestamp; }
+  
     public String serializeMSG(){
         return "MSG:" + username + "|" + content;
     }
