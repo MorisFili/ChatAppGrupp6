@@ -3,10 +3,7 @@ package GUI;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -66,15 +63,17 @@ public class SettingsWindow {
 
         // Button click
         button.setOnAction(x -> {
-            if (username.getText().isEmpty()) new Alert(Alert.AlertType.ERROR, "Username missing.").showAndWait();
-            try { // Try-catch block för parsing, kan brytas ut till fler om man vill
-                String[] ipPort = ipAddress.getText().split(":");
-                String ip = ipPort[0];
-                int port = Integer.parseInt(ipPort[1]);
-                user = new UserSession(username.getText(), group.getText(), ip, port);
-                windowManager.showChat(user);
-            }catch (NumberFormatException e) {
-                System.out.println("Invalid host address format -> " + e.getMessage());
+            if (username.getText().isEmpty()) {
+                new Alert(Alert.AlertType.NONE, "Username missing.", ButtonType.OK).showAndWait();
+            } else {
+                try {
+                    user = new UserSession(username.getText(), group.getText(), ipAddress.getText(),
+                            Integer.parseInt(listenerPort.getText()), Integer.parseInt(targetPort.getText()));
+                    windowManager.showChat(user);
+
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid host address format -> " + e.getMessage());
+                }
             }
         });
     }

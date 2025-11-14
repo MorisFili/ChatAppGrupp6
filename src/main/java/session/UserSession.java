@@ -1,5 +1,7 @@
 package session;
 
+import model.TextNode;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,14 +15,17 @@ public class UserSession {
     private final String username;
     private final String group;
     private final String ip;
-    private final int port;
-    private final List<PrintWriter> peers = Collections.synchronizedList(new ArrayList<>()); // Lista av peers för output stream, här eller annanstans
+    private final int targetPort;
+    private final int listenerPort;
+    private final List<PrintWriter> peers = Collections.synchronizedList(new ArrayList<>());
+    private final List<TextNode> chatLog = Collections.synchronizedList(new ArrayList<>());
 
-    public UserSession(String username, String group, String ip, int port) {
+    public UserSession(String username, String group, String ip, int listenerPort, int targetPort) {
         this.username = username;
         this.group = group;
         this.ip = ip;
-        this.port = port;
+        this.listenerPort = listenerPort;
+        this.targetPort = targetPort;
     }
 
     public String getUsername() {
@@ -29,5 +34,25 @@ public class UserSession {
 
     public String getGroup() {
         return group;
+    }
+
+    public List<PrintWriter> getPeers() {
+        return peers;
+    }
+
+    public List<TextNode> getChatLog() {
+        return chatLog;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public int getListenerPort() {
+        return listenerPort;
+    }
+
+    public int getTargetPort() {
+        return targetPort;
     }
 }
