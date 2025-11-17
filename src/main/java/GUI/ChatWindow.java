@@ -12,6 +12,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
 import model.TextNode;
+import network.NetworkUser;
 import session.UserSession;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class ChatWindow {
     private final TextArea inputText;
     private final TextFlow mainBody;
     private UserSession user;
+    private NetworkUser network;
 
     public ChatWindow(WindowManager windowManager){
         this.windowManager = windowManager;
@@ -60,8 +62,11 @@ public class ChatWindow {
 
         // Button click
         send.setOnAction(x -> {
-            mainBody.getChildren().add(new TextNode(user.getUsername(), LocalDateTime.now(), inputText.getText()));
+            TextNode msg = new TextNode(user.getUsername(), LocalDateTime.now(), inputText.getText());
+            mainBody.getChildren().add(msg);
+            network.sendMSG(msg);
             inputText.clear();
+
         });
 
         // Text area interceptor för 'enter'
@@ -73,11 +78,27 @@ public class ChatWindow {
         });
     }
 
+    public void wireNetwork(NetworkUser network){
+        this.network = network;
+    }
+
     public Scene getScene() {
         return scene;
     }
 
     public void setUser(UserSession user) {
         this.user = user;
+    }
+
+    public UserSession getUser() {
+        return user;
+    }
+
+    public TextFlow getMainBody() {
+        return mainBody;
+    }
+
+    public NetworkUser getNetwork() {
+        return network;
     }
 }

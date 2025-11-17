@@ -1,46 +1,110 @@
 package network;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import GUI.ChatWindow;
+import javafx.application.Platform;
+import model.TextNode;
+import session.UserSession;
+
+import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class NetworkUser {
     //Sending and receiving message logic
 
-    private final Socket socket;
-    private final BufferedReader bufferedReader;
-    private final BufferedWriter bufferedWriter;
+    private final UserSession userSession;
+    private final ChatWindow chatWindow;
+    public ExecutorService threadPool = Executors.newCachedThreadPool();
+    private final List<Socket> connections = Collections.synchronizedList(new ArrayList<>());
+    private final Map<String, PrintWriter> peers = Collections.synchronizedMap(new HashMap<>());
+    private ServerSocket server;
 
-    public NetworkUser(Socket socket) throws IOException {
-        this.socket = socket;
-        this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+    public NetworkUser(UserSession userSession, ChatWindow chatWindow) {
+        this.userSession = userSession;
+        this.chatWindow = chatWindow;
     }
 
-    public void sendMessage(String message) throws IOException {
-        bufferedWriter.write(message);
-        bufferedWriter.newLine();
-        bufferedWriter.flush();
-    }
+    // Connecta till server enl uppgifterna från settingwindow
+    public void connect() {
+        if (userSession.getIp().startsWith("0")) return; // Skippa om default
 
-    public String receiveMessage() throws IOException {
-        return bufferedReader.readLine();
-    }
-
-    public Boolean isConnected() {
-        return socket != null && socket.isConnected() && !socket.isClosed();
-    }
-
-    public void close() {
         try {
-            bufferedReader.close();
-            bufferedWriter.close();
+            Socket socket = new Socket(userSession.getIp(), userSession.getTargetPort());
+            connections.add(socket);
+            threadPool.submit(() -> socketHandler(socket));
+        } catch (IOException e) {
+            System.err.println("Connection failed: " + e.getMessage());
+        }
+    }
+
+    // Statisk "server" som väntar på inkommande uppkopplingar i bakgrunden
+    public void server() {
+        threadPool.submit(() -> {
+            try {
+                server = new ServerSocket(userSession.getListenerPort());
+                while (!server.isClosed()) {
+                        try {
+                            Socket socket = server.accept();
+                            connections.add(socket);
+                            threadPool.submit(() -> socketHandler(socket));
+                        } catch (IOException e) {
+                            break;
+                        }
+                    }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    // Hantera alla uppkopplingar
+    private void socketHandler(Socket socket) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+
+
+            out.println("OK:" + userSession.getUsername()); // Skicka substring + username till mottagaren vid uppkoppling
+
+            String line;
+            while ((line = in.readLine()) != null) {
+                if (line.startsWith("OK:")){
+                    String username = line.substring(3);
+                    peers.put(username, out); // lagra username + printwriter i en hashmap
+                    TextNode message = new TextNode(username, LocalDateTime.now(), "User has connected.");
+                    sendMSG(message);
+                    //Platform.runLater(() -> chatWindow.getMainBody().getChildren().add(message));
+                }
+                if (line.startsWith("MSG:")) { // meddelanden startar med MSG för att kunna urskilja
+                    TextNode msg = TextNode.deserializeMSG(line);
+                    userSession.getChatLog().add(msg);
+                    Platform.runLater(() -> chatWindow.getMainBody().getChildren().add(msg));
+                }
+            }
+
             socket.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    public void sendMSG(TextNode msg) {
+        // skickar till alla per default, ändra logik här
+        for (PrintWriter pw : peers.values()) {
+            pw.println(msg.serializeMSG());
+        }
+    }
+
+    public void terminateNetwork() throws IOException {
+        for (Socket connection : connections){
+            connection.close();
+        }
+        if (server != null) server.close();
+
+    }
+
 }

@@ -2,9 +2,7 @@ package session;
 
 import model.TextNode;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,7 +15,7 @@ public class UserSession {
     private final String ip;
     private final int targetPort;
     private final int listenerPort;
-    private final List<PrintWriter> peers = Collections.synchronizedList(new ArrayList<>());
+
     private final List<TextNode> chatLog = Collections.synchronizedList(new ArrayList<>());
 
     public UserSession(String username, String group, String ip, int listenerPort, int targetPort) {
@@ -34,10 +32,6 @@ public class UserSession {
 
     public String getGroup() {
         return group;
-    }
-
-    public List<PrintWriter> getPeers() {
-        return peers;
     }
 
     public List<TextNode> getChatLog() {

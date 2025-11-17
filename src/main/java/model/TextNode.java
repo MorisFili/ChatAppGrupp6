@@ -27,4 +27,16 @@ public class TextNode extends Text {
         String[] p = msg.substring(4).split("\\|");
         return new TextNode(p[0], LocalDateTime.now(), p[1]);
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public String getContent() {
+        return content;
+    }
 }

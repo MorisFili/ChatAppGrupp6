@@ -8,7 +8,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import network.NetworkUser;
 import session.UserSession;
+
 
 public class SettingsWindow {
 
@@ -56,6 +58,7 @@ public class SettingsWindow {
         scene = new Scene(root);
 
         listenerSetup();
+
     }
 
     public void listenerSetup(){
@@ -70,11 +73,16 @@ public class SettingsWindow {
                     user = new UserSession(username.getText(), group.getText(), ipAddress.getText(),
                             Integer.parseInt(listenerPort.getText()), Integer.parseInt(targetPort.getText()));
                     windowManager.showChat(user);
+                    NetworkUser networkUser = new NetworkUser(user, windowManager.getChatWindow());
+                    networkUser.server();
+                    networkUser.connect();
+                    windowManager.getChatWindow().wireNetwork(networkUser);
 
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid host address format -> " + e.getMessage());
                 }
             }
+
         });
     }
 
