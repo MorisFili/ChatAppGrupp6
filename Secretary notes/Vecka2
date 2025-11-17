@@ -1,0 +1,20 @@
+Alla närvarande.
+
+Sprint planning:
+
+	Hussein: Scrum Master
+	Moris: Sekreterare
+
+Sprint goal/Increment: 	Sätta ihop alla lösa trådar så att det mest grundläggande som fungerar, 
+			man ska kunna skriva till varandra online och chatloggen ska sparas till en textfil.
+			Kunna skicka bilder eller emojies.
+
+Nya user stories/issues:
+	1. Kunna skicka emojies.
+	2. Nya chatt funktionaliteter (sparka, skicka endast till en person)
+	3. User status i chatten (online, offline)
+
+Individuell sprint:
+Moris: Koppla GUI med servern
+Hussein: Koppla databas med servern
+Vehid: Titta mer på server biten
