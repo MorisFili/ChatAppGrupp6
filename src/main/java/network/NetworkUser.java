@@ -3,6 +3,9 @@ package network;
 import GUI.ChatWindow;
 import javafx.application.Platform;
 import model.TextNode;
+import org.bitlet.weupnp.GatewayDevice;
+import org.bitlet.weupnp.GatewayDiscover;
+import org.xml.sax.SAXException;
 import session.UserSession;
 
 import java.io.*;
@@ -22,6 +25,7 @@ public class NetworkUser {
     private final List<Socket> connections = Collections.synchronizedList(new ArrayList<>());
     private final Map<String, PrintWriter> peers = Collections.synchronizedMap(new HashMap<>());
     private ServerSocket server;
+    private GatewayDevice device;
 
     public NetworkUser(UserSession userSession, ChatWindow chatWindow) {
         this.userSession = userSession;
@@ -41,20 +45,40 @@ public class NetworkUser {
         }
     }
 
+    // Gateway checker för UPnP
+
+    private void gateway() {
+        try {
+            GatewayDiscover discover = new GatewayDiscover();
+            discover.discover();
+            device = discover.getValidGateway();
+            if (device != null) {
+                String localIp = device.getLocalAddress().getHostAddress();
+                int port = userSession.getListenerPort();
+                device.addPortMapping(port, port, localIp, "TCP", "ChatApp");
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+
     // Statisk "server" som väntar på inkommande uppkopplingar i bakgrunden
     public void server() {
         threadPool.submit(() -> {
             try {
                 server = new ServerSocket(userSession.getListenerPort());
+
+                gateway();
+
                 while (!server.isClosed()) {
-                        try {
-                            Socket socket = server.accept();
-                            connections.add(socket);
-                            threadPool.submit(() -> socketHandler(socket));
-                        } catch (IOException e) {
-                            break;
-                        }
+                    try {
+                        Socket socket = server.accept();
+                        connections.add(socket);
+                        threadPool.submit(() -> socketHandler(socket));
+                    } catch (IOException e) {
+                        break;
                     }
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -71,7 +95,7 @@ public class NetworkUser {
 
             String line;
             while ((line = in.readLine()) != null) {
-                if (line.startsWith("OK:")){
+                if (line.startsWith("OK:")) {
                     String username = line.substring(3);
                     peers.put(username, out); // lagra username + printwriter i en hashmap
                     TextNode message = new TextNode(username, LocalDateTime.now(), "User has connected.");
@@ -100,7 +124,13 @@ public class NetworkUser {
     }
 
     public void terminateNetwork() throws IOException {
-        for (Socket connection : connections){
+        try {
+            device.deletePortMapping(userSession.getListenerPort(), "TCP");
+        } catch (SAXException e) {
+            System.out.println(e.getMessage());
+        }
+
+        for (Socket connection : connections) {
             connection.close();
         }
         if (server != null) server.close();
