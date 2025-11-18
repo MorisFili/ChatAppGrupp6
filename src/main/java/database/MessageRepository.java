@@ -1,5 +1,6 @@
 package database;
 
+import javafx.scene.Node;
 import model.TextNode;
 
 import java.io.BufferedWriter;

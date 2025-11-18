@@ -8,7 +8,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import network.NetworkUser;
 import session.UserSession;
+
+import java.io.IOException;
+import java.net.Socket;
 
 public class SettingsWindow {
 
@@ -67,12 +71,23 @@ public class SettingsWindow {
                 new Alert(Alert.AlertType.NONE, "Username missing.", ButtonType.OK).showAndWait();
             } else {
                 try {
+                    String userUsername = username.getText();
+                    String userIP = ipAddress.getText();
+                    int targetP = Integer.parseInt(targetPort.getText());
+
+                    Socket socket = new Socket(userIP, targetP);
+                    NetworkUser networkUser = new NetworkUser(socket);
+
+                    networkUser.sendMessage(userUsername);
                     user = new UserSession(username.getText(), group.getText(), ipAddress.getText(),
-                            Integer.parseInt(listenerPort.getText()), Integer.parseInt(targetPort.getText()));
+                            Integer.parseInt(listenerPort.getText()), Integer.parseInt(targetPort.getText()), networkUser);
                     windowManager.showChat(user);
 
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid host address format -> " + e.getMessage());
+                } catch (IOException e) {
+                    new Alert(Alert.AlertType.ERROR, "Could not connect to server at " + ipAddress.getText() + ":" + targetPort.getText() + ". Check if the server is running.", ButtonType.OK).showAndWait();
+                    System.out.println("Connection error: " + e.getMessage());
                 }
             }
         });
