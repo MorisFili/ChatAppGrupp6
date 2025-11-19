@@ -2,6 +2,7 @@ package network;
 
 import GUI.ChatWindow;
 import javafx.application.Platform;
+import model.SystemMessage;
 import model.TextNode;
 import org.bitlet.weupnp.GatewayDevice;
 import org.bitlet.weupnp.GatewayDiscover;
@@ -9,10 +10,8 @@ import org.xml.sax.SAXException;
 import session.UserSession;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,7 +22,7 @@ public class NetworkUser {
     private final UserSession userSession;
     private final ChatWindow chatWindow;
     public ExecutorService threadPool = Executors.newCachedThreadPool();
-    private final List<Socket> connections = Collections.synchronizedList(new ArrayList<>());
+    private final Map<String, Socket> connections = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, PrintWriter> peers = Collections.synchronizedMap(new HashMap<>());
     private ServerSocket server;
     private GatewayDevice device;
@@ -40,7 +39,6 @@ public class NetworkUser {
         try {
             Socket socket = new Socket(userSession.getIp(), userSession.getTargetPort());
             System.out.println("Successfully connected to: " + userSession.getIp() + ":" + userSession.getTargetPort());
-            connections.add(socket);
             threadPool.submit(() -> socketHandler(socket));
         } catch (IOException e) {
             System.out.println("Connection failed: " + e.getMessage());
@@ -80,13 +78,12 @@ public class NetworkUser {
             try {
                 server = new ServerSocket(userSession.getListenerPort());
                 System.out.println("Listener established on port: " + userSession.getListenerPort());
-                System.out.println("BOUND TO: " + server.getInetAddress() + ":" + server.getLocalPort());
+
                 boolean mapEstablished = gateway();
 
                 while (!server.isClosed() && mapEstablished) {
                     try {
                         Socket socket = server.accept();
-                        connections.add(socket);
                         threadPool.submit(() -> socketHandler(socket));
                     } catch (IOException e) {
                         break;
@@ -105,18 +102,29 @@ public class NetworkUser {
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
 
 
-            out.println("OK:" + userSession.getUsername()); // Skicka substring + username till mottagaren vid uppkoppling
+            out.println("OK:" + userSession.getUsername());
 
             String line;
             while ((line = in.readLine()) != null) {
+                if (line.startsWith("killswitch")) terminateNetwork();
                 if (line.startsWith("OK:")) {
                     String username = line.substring(3);
-                    peers.put(username, out); // lagra username + printwriter i en hashmap
-                    TextNode message = new TextNode("System", LocalDateTime.now(), username + " has connected.");
-                    sendMSG(message);
-                    //Platform.runLater(() -> chatWindow.getMainBody().getChildren().add(message));
+                    SystemMessage message = new SystemMessage(username, "has connected.");
+                    Platform.runLater(() -> chatWindow.getMainBody().getChildren().add(message));
+                    peers.put(username, out);
+                    connections.put(username, socket);
                 }
-                if (line.startsWith("MSG:")) { // meddelanden startar med MSG för att kunna urskilja
+                if (line.startsWith("SYS:")) {
+                    SystemMessage sys = SystemMessage.deserializeMSG(line);
+                    Platform.runLater(() -> chatWindow.getMainBody().getChildren().add(sys));
+                    if (sys.getContent().contains("disconnected")){
+                        connections.get(sys.getUsername()).close();
+                        peers.get(sys.getUsername()).close();
+                        connections.remove(sys.getUsername());
+                        peers.remove(sys.getUsername());
+                    }
+                }
+                if (line.startsWith("MSG:")) {
                     TextNode msg = TextNode.deserializeMSG(line);
                     userSession.getChatLog().add(msg);
                     Platform.runLater(() -> chatWindow.getMainBody().getChildren().add(msg));
@@ -131,13 +139,28 @@ public class NetworkUser {
     }
 
     public void sendMSG(TextNode msg) {
-        // skickar till alla per default, ändra logik här
         for (PrintWriter pw : peers.values()) {
             pw.println(msg.serializeMSG());
         }
     }
 
+    public void sendSYS(SystemMessage sys) {
+        for (PrintWriter pw : peers.values()) {
+            pw.println(sys.serializeMSG());
+        }
+    }
+
+    public void sendLine(PrintWriter out, String line){
+        if (out == null){
+            System.out.println("User already disconnected or you are sending to yourself");
+            return;
+        }
+        out.println(line);
+    }
+
     public void terminateNetwork() throws IOException {
+        sendSYS(new SystemMessage(userSession.getUsername(), "has disconnected."));
+        System.out.println("Disconnected.");
         if (device != null) {
             try {
                 device.deletePortMapping(userSession.getListenerPort(), "TCP");
@@ -146,14 +169,13 @@ public class NetworkUser {
             }
         }
 
-        for (Socket connection : connections) {
+        for (Socket connection : connections.values()) {
             connection.close();
         }
         if (server != null) server.close();
-
     }
 
-    public ServerSocket getServer() {
-        return server;
+    public Map<String, PrintWriter> getPeers() {
+        return peers;
     }
 }

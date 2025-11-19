@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 public class ChatWindow {
 
     private final WindowManager windowManager;
+    public static ChatWindow instance; // Singleton instance
     private final Scene scene;
     private final Button send;
     private final TextArea inputText;
@@ -29,9 +30,10 @@ public class ChatWindow {
 
     public ChatWindow(WindowManager windowManager){
         this.windowManager = windowManager;
+        instance = this;
 
         mainBody = new TextFlow();
-
+        mainBody.setPadding(new Insets(5,0,5,3));
         ScrollPane scrollPane = new ScrollPane(mainBody);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
@@ -62,6 +64,7 @@ public class ChatWindow {
 
         // Button click
         send.setOnAction(x -> {
+            if (inputText.getText().isEmpty()) x.consume();
             TextNode msg = new TextNode(user.getUsername(), LocalDateTime.now(), inputText.getText());
             mainBody.getChildren().add(msg);
             network.sendMSG(msg);

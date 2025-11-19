@@ -9,7 +9,6 @@ import java.util.List;
 public class UserSession {
 
     // All runtime-info här
-
     private final String username;
     private final String group;
     private final String ip;
