@@ -9,6 +9,7 @@ import org.xml.sax.SAXException;
 import session.UserSession;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.LocalDateTime;
@@ -38,39 +39,51 @@ public class NetworkUser {
 
         try {
             Socket socket = new Socket(userSession.getIp(), userSession.getTargetPort());
+            System.out.println("Successfully connected to: " + userSession.getIp() + ":" + userSession.getTargetPort());
             connections.add(socket);
             threadPool.submit(() -> socketHandler(socket));
         } catch (IOException e) {
-            System.err.println("Connection failed: " + e.getMessage());
+            System.out.println("Connection failed: " + e.getMessage());
         }
     }
 
+
     // Gateway checker för UPnP
 
-    private void gateway() {
+    private boolean gateway() {
+
+        GatewayDiscover discover = new GatewayDiscover();
+
         try {
-            GatewayDiscover discover = new GatewayDiscover();
             discover.discover();
             device = discover.getValidGateway();
             if (device != null) {
                 String localIp = device.getLocalAddress().getHostAddress();
                 int port = userSession.getListenerPort();
                 device.addPortMapping(port, port, localIp, "TCP", "ChatApp");
+                System.out.println("Mapping complete.");
+                System.out.println("Bound to: " + localIp);
+                return true;
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Mapping failed.");
+            return false;
         }
+        System.out.println("Mapping timeout.");
+        return false;
     }
-
 
     // Statisk "server" som väntar på inkommande uppkopplingar i bakgrunden
     public void server() {
         threadPool.submit(() -> {
             try {
                 server = new ServerSocket(userSession.getListenerPort());
+                System.out.println("Listener established on port: " + userSession.getListenerPort());
+                System.out.println("BOUND TO: " + server.getInetAddress() + ":" + server.getLocalPort());
+                boolean mapEstablished = gateway();
 
-                gateway();
-
-                while (!server.isClosed()) {
+                while (!server.isClosed() && mapEstablished) {
                     try {
                         Socket socket = server.accept();
                         connections.add(socket);
@@ -82,6 +95,7 @@ public class NetworkUser {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            System.out.println("Listener terminated.");
         });
     }
 
@@ -98,7 +112,7 @@ public class NetworkUser {
                 if (line.startsWith("OK:")) {
                     String username = line.substring(3);
                     peers.put(username, out); // lagra username + printwriter i en hashmap
-                    TextNode message = new TextNode(username, LocalDateTime.now(), "User has connected.");
+                    TextNode message = new TextNode("System", LocalDateTime.now(), username + " has connected.");
                     sendMSG(message);
                     //Platform.runLater(() -> chatWindow.getMainBody().getChildren().add(message));
                 }
@@ -112,7 +126,7 @@ public class NetworkUser {
             socket.close();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -124,10 +138,12 @@ public class NetworkUser {
     }
 
     public void terminateNetwork() throws IOException {
-        try {
-            device.deletePortMapping(userSession.getListenerPort(), "TCP");
-        } catch (SAXException e) {
-            System.out.println(e.getMessage());
+        if (device != null) {
+            try {
+                device.deletePortMapping(userSession.getListenerPort(), "TCP");
+            } catch (SAXException e) {
+                System.out.println(e.getMessage());
+            }
         }
 
         for (Socket connection : connections) {
@@ -137,4 +153,7 @@ public class NetworkUser {
 
     }
 
+    public ServerSocket getServer() {
+        return server;
+    }
 }
