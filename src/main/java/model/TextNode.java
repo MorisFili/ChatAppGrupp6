@@ -34,7 +34,7 @@ public class TextNode extends Text {
 
         kick.setOnAction(x -> {
             PrintWriter target = ChatWindow.instance.getNetwork().getPeers().get(username);
-            ChatWindow.instance.getNetwork().sendLine(target, "killswitch");
+            ChatWindow.instance.getNetwork().sendLine(target, "killswitch:" + ChatWindow.instance.getUser().getUsername());
         });
 
         delete.setOnAction(x -> {
@@ -57,11 +57,6 @@ public class TextNode extends Text {
 
 
     }
-
-    // Lägde getters eftersom jag vill skriva fälterna till databasen
-    public String getContent() { return content; }
-    public String getUsername() { return username; }
-    public LocalDateTime getTimestamp() { return timestamp; }
   
     public String serializeMSG(){
         return "MSG:" + username + "|" + content;

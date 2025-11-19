@@ -1,0 +1,405 @@
+Index: src/main/java/model/TextNode.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package model;\r\n\r\nimport GUI.ChatWindow;\r\nimport javafx.scene.control.ContextMenu;\r\nimport javafx.scene.control.MenuItem;\r\nimport javafx.scene.input.Clipboard;\r\nimport javafx.scene.input.ClipboardContent;\r\nimport javafx.scene.input.MouseButton;\r\nimport javafx.scene.text.Font;\r\nimport javafx.scene.text.Text;\r\n\r\nimport java.io.PrintWriter;\r\nimport java.time.LocalDateTime;\r\nimport java.time.format.DateTimeFormatter;\r\n\r\npublic class TextNode extends Text {\r\n    private final String username;\r\n    private final LocalDateTime timestamp;\r\n    private final String content;\r\n\r\n    public TextNode(String username, LocalDateTime timestamp, String content) {\r\n        this.content = content;\r\n        this.username = username;\r\n        this.timestamp = timestamp;\r\n\r\n        setFont(Font.font(\"Segoe UI Emoji\", 12));\r\n        setText(\"[\" + timestamp.format(DateTimeFormatter.ofPattern(\"dd MMM HH:mm\")) + \"] \" + username + \": \" + content + \"\\n\");\r\n\r\n        // Right-click menu\r\n        ContextMenu menu = new ContextMenu();\r\n        MenuItem delete = new MenuItem(\"Delete\");\r\n        MenuItem copy = new MenuItem(\"Copy\");\r\n        MenuItem kick = new MenuItem(\"Kick\" + \" \" + username);\r\n\r\n        kick.setOnAction(x -> {\r\n            PrintWriter target = ChatWindow.instance.getNetwork().getPeers().get(username);\r\n            ChatWindow.instance.getNetwork().sendLine(target, \"killswitch\");\r\n        });\r\n\r\n        delete.setOnAction(x -> {\r\n            // Delete logic\r\n            setText(\"Message has been deleted by: \" + ChatWindow.instance.getUser().getUsername() + \"\\n\");\r\n        });\r\n\r\n        copy.setOnAction(x -> {\r\n            ClipboardContent c = new ClipboardContent();\r\n            c.putString(content);\r\n            Clipboard.getSystemClipboard().setContent(c);\r\n\r\n        });\r\n\r\n        menu.getItems().addAll(delete, copy, kick);\r\n        setOnMouseClicked(x -> {\r\n            if (x.getButton() == MouseButton.SECONDARY) menu.show(this, x.getScreenX(), x.getScreenY());\r\n        });\r\n\r\n\r\n\r\n    }\r\n\r\n    // Lägde getters eftersom jag vill skriva fälterna till databasen\r\n    public String getContent() { return content; }\r\n    public String getUsername() { return username; }\r\n    public LocalDateTime getTimestamp() { return timestamp; }\r\n  \r\n    public String serializeMSG(){\r\n        return \"MSG:\" + username + \"|\" + content;\r\n    }\r\n\r\n    public static TextNode deserializeMSG(String msg) {\r\n        String[] p = msg.substring(4).split(\"\\\\|\");\r\n        return new TextNode(p[0], LocalDateTime.now(), p[1]);\r\n    }\r\n\r\n    public String getUsername() {\r\n        return username;\r\n    }\r\n\r\n    public LocalDateTime getTimestamp() {\r\n        return timestamp;\r\n    }\r\n\r\n    public String getContent() {\r\n        return content;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/model/TextNode.java b/src/main/java/model/TextNode.java
+--- a/src/main/java/model/TextNode.java	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
++++ b/src/main/java/model/TextNode.java	(date 1763565377461)
+@@ -34,7 +34,7 @@
+ 
+         kick.setOnAction(x -> {
+             PrintWriter target = ChatWindow.instance.getNetwork().getPeers().get(username);
+-            ChatWindow.instance.getNetwork().sendLine(target, "killswitch");
++            ChatWindow.instance.getNetwork().sendLine(target, "killswitch:" + ChatWindow.instance.getUser().getUsername());
+         });
+ 
+         delete.setOnAction(x -> {
+@@ -57,11 +57,6 @@
+ 
+ 
+     }
+-
+-    // Lägde getters eftersom jag vill skriva fälterna till databasen
+-    public String getContent() { return content; }
+-    public String getUsername() { return username; }
+-    public LocalDateTime getTimestamp() { return timestamp; }
+   
+     public String serializeMSG(){
+         return "MSG:" + username + "|" + content;
+Index: .idea/.gitignore
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+deleted file mode 100644
+--- a/.idea/.gitignore	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
++++ /dev/null	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
+@@ -1,8 +0,0 @@
+-# Default ignored files
+-/shelf/
+-/workspace.xml
+-# Editor-based HTTP Client requests
+-/httpRequests/
+-# Datasource local storage ignored files
+-/dataSources/
+-/dataSources.local.xml
+Index: src/main/java/database/MessageRepository.java
+===================================================================
+diff --git a/src/main/java/database/MessageRepository.java b/src/main/java/database/MessageRepository.java
+deleted file mode 100644
+--- a/src/main/java/database/MessageRepository.java	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
++++ /dev/null	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
+@@ -1,69 +0,0 @@
+-package database;
+-
+-import model.TextNode;
+-
+-import java.io.BufferedWriter;
+-import java.io.File;
+-import java.io.FileWriter;
+-import java.io.IOException;
+-import java.nio.charset.StandardCharsets;
+-import java.nio.file.Files;
+-import java.nio.file.Path;
+-import java.util.List;
+-import java.util.stream.IntStream;
+-
+-public class MessageRepository implements IMessageRepository {
+-    private final File file = new File("Messages.txt");
+-
+-    @Override
+-    public void saveMessage(TextNode message) {
+-        String fileName = file.getName();
+-
+-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+-
+-            String content = message.getContent();
+-            String username = message.getUsername();
+-            String timestamp = String.valueOf(message.getTimestamp());
+-
+-            writer
+-                    .append(content)
+-                    .append("\n")
+-                    .append(username)
+-                    .append("\n")
+-                    .append(timestamp)
+-                    .append("\n");
+-
+-        } catch (IOException e) {
+-            System.out.println("Error occurred while writing in file file.");
+-            e.printStackTrace();
+-        }
+-    }
+-
+-    @Override
+-    public void deleteMessage(String username, String content) throws Exception {
+-        Path filePath = Path.of(file.toURI());
+-
+-        // Reads all lines into memory
+-        List<String> fileLines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+-
+-        // Finds the index of line to be deleted based on Content/Message AND Username
+-        int startIndex = IntStream.range(0, fileLines.size())
+-                .filter(i -> fileLines.get(i).trim().equals(content.trim()) && fileLines.get(i + 1).trim().equals(username.trim()))
+-                .findFirst()
+-                .orElse(-1);
+-
+-        if (startIndex == -1) {
+-            System.out.println("Message content not found: " + content);
+-            return;
+-        }
+-
+-        // Filters and Rewrite
+-        List<String> updatedLines = IntStream.range(0, fileLines.size())
+-                .filter(i -> i != startIndex && i != startIndex + 1 && i != startIndex + 2)
+-                .mapToObj(fileLines::get)
+-                .toList();
+-
+-        // Overwrites the original file
+-        Files.write( filePath, updatedLines );
+-    }
+-}
+Index: src/main/java/network/Main.java
+===================================================================
+diff --git a/src/main/java/network/Main.java b/src/main/java/network/Main.java
+deleted file mode 100644
+--- a/src/main/java/network/Main.java	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
++++ /dev/null	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
+@@ -1,21 +0,0 @@
+-package network;
+-
+-
+-import java.io.IOException;
+-import java.net.Socket;
+-import java.util.Scanner;
+-
+-public class Main {
+-    public static void main(String[] args) throws IOException, InterruptedException {
+-
+-        Scanner scanner = new Scanner(System.in);
+-        System.out.println("Enter your usename: ");
+-        String username = scanner.nextLine();
+-
+-        Socket socket = new Socket("localhost", 5000);
+-        NetworkUser networkUser = new NetworkUser(socket);
+-
+-        ConsoleUI consoleUI = new ConsoleUI(networkUser, username);
+-        consoleUI.start();
+-    }
+-}
+\ No newline at end of file
+Index: .idea/vcs.xml
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+deleted file mode 100644
+--- a/.idea/vcs.xml	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
++++ /dev/null	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="VcsDirectoryMappings">
+-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: src/main/java/network/Server.java
+===================================================================
+diff --git a/src/main/java/network/Server.java b/src/main/java/network/Server.java
+deleted file mode 100644
+--- a/src/main/java/network/Server.java	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
++++ /dev/null	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
+@@ -1,57 +0,0 @@
+-package network;
+-
+-import java.io.IOException;
+-import java.net.ServerSocket;
+-import java.net.Socket;
+-import java.util.List;
+-import java.util.concurrent.CopyOnWriteArrayList;
+-
+-public class Server {
+-    private ServerSocket serverSocket;
+-    private final List<ClientHandler> clients = new CopyOnWriteArrayList<>();
+-
+-    public Server(ServerSocket serverSocket) {
+-        this.serverSocket = serverSocket;
+-    }
+-
+-    public void startServer() {
+-
+-        try {
+-            while(!serverSocket.isClosed()) {
+-                
+-                Socket socket = serverSocket.accept();
+-                System.out.println("A new client has connected");
+-                ClientHandler clientHandler = new ClientHandler(socket, this);
+-
+-                clients.add(clientHandler);
+-                new Thread(clientHandler).start();
+-
+-            }
+-        } catch (IOException e) {
+-            e.printStackTrace();
+-        }
+-    }
+-
+-    public void broadcast(String message, ClientHandler sender) {
+-        for (ClientHandler client : clients) {
+-            if (client != sender) {
+-                client.sendMessage(message);
+-            }
+-        }
+-    }
+-
+-    public void removeClientHandler(ClientHandler client) {
+-        clients.remove(client);
+-        broadcast("SERVER: " + client.getUsername() + " has left the chat", null);
+-    }
+-
+-    public void closeServerSocket() {
+-        try {
+-            if (serverSocket != null) {
+-                serverSocket.close();
+-            }
+-        } catch (IOException e) {
+-            e.printStackTrace();
+-        }
+-    }
+-}
+Index: src/main/java/network/ServerController.java
+===================================================================
+diff --git a/src/main/java/network/ServerController.java b/src/main/java/network/ServerController.java
+deleted file mode 100644
+--- a/src/main/java/network/ServerController.java	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
++++ /dev/null	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
+@@ -1,29 +0,0 @@
+-package network;
+-
+-import java.io.IOException;
+-import java.net.ServerSocket;
+-
+-public class ServerController {
+-
+-    private final Server server;
+-
+-    public ServerController(int port) throws IOException {
+-        ServerSocket serverSocket = new ServerSocket(port);
+-        this.server = new Server(serverSocket);
+-    }
+-
+-    public void run() {
+-        System.out.println("Server has started");
+-        server.startServer();
+-    }
+-
+-    public void stop() {
+-        System.out.println("Server has stopped");
+-        server.closeServerSocket();
+-    }
+-
+-    public static void main(String[] args) throws IOException {
+-        ServerController serverController = new ServerController(5000);
+-        serverController.run();
+-    }
+-}
+Index: src/main/java/database/IMessageRepository.java
+===================================================================
+diff --git a/src/main/java/database/IMessageRepository.java b/src/main/java/database/IMessageRepository.java
+deleted file mode 100644
+--- a/src/main/java/database/IMessageRepository.java	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
++++ /dev/null	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
+@@ -1,8 +0,0 @@
+-package database;
+-
+-import model.TextNode;
+-
+-public interface IMessageRepository {
+-    void saveMessage(TextNode message);
+-    void deleteMessage(String username, String content) throws Exception;
+-}
+Index: src/main/java/network/ClientHandler.java
+===================================================================
+diff --git a/src/main/java/network/ClientHandler.java b/src/main/java/network/ClientHandler.java
+deleted file mode 100644
+--- a/src/main/java/network/ClientHandler.java	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
++++ /dev/null	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
+@@ -1,66 +0,0 @@
+-package network;
+-
+-import java.io.BufferedReader;
+-import java.io.BufferedWriter;
+-import java.io.IOException;
+-import java.io.InputStreamReader;
+-import java.io.OutputStreamWriter;
+-import java.net.Socket;
+-
+-public class ClientHandler implements Runnable {
+-    
+-    private Socket socket;
+-    private Server server;
+-    private BufferedReader bufferedReader;
+-    private BufferedWriter bufferedWriter;
+-    private String username;
+-
+-    public ClientHandler(Socket socket, Server server) {
+-        try {
+-            this.socket = socket;
+-            this.server = server;
+-            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+-            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+-            this.username = bufferedReader.readLine();
+-            server.broadcast("SERVER: " + username + " has joined the chat", this);
+-
+-        } catch (IOException e) {
+-            throw new RuntimeException("Error creating client handler", e);
+-        }
+-    }
+-
+-    @Override
+-    public void run() {
+-        try {
+-            String message;
+-            while ((message = bufferedReader.readLine()) != null) {
+-                server.broadcast(message, this);
+-            }
+-        } catch (IOException e) {
+-            close();
+-        }
+-    }
+-
+-    public void sendMessage(String message) {
+-        try {
+-            bufferedWriter.write(message);
+-            bufferedWriter.newLine();
+-            bufferedWriter.flush();
+-        } catch (IOException e) {
+-            close();
+-        }
+-    }
+-
+-    public void close() {
+-        server.removeClientHandler(this);
+-        try {
+-            if (bufferedReader != null) bufferedReader.close();
+-            if (bufferedWriter != null) bufferedWriter.close();
+-            if (socket != null) socket.close();
+-        } catch (IOException ignored) {}
+-    }
+-
+-    public String getUsername() {
+-        return username;
+-    }
+-}
+Index: src/main/java/network/ConsoleUI.java
+===================================================================
+diff --git a/src/main/java/network/ConsoleUI.java b/src/main/java/network/ConsoleUI.java
+deleted file mode 100644
+--- a/src/main/java/network/ConsoleUI.java	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
++++ /dev/null	(revision 208d62bc73a0cfd09680b77922428476e2c88b3b)
+@@ -1,45 +0,0 @@
+-package network;
+-
+-import java.io.IOException;
+-import java.util.Scanner;
+-
+-public class ConsoleUI {
+-    //Handle reading input and DISPLAYING messages
+-
+-    private final NetworkUser networkUser;
+-    private final String username;
+-
+-    public ConsoleUI(NetworkUser networkUser, String username) {
+-        this.networkUser = networkUser;
+-        this.username = username;
+-    }
+-
+-    public void start() {
+-        new Thread(() -> {
+-            try {
+-                while(networkUser.isConnected()) {
+-                    String message = networkUser.receiveMessage();
+-                    if(message == null) break;
+-                    System.out.println(message);
+-                }
+-            } catch (IOException e) {
+-                e.printStackTrace();
+-            } finally {
+-                networkUser.close();
+-            }
+-        }).start();
+-
+-        try(Scanner scanner = new Scanner(System.in)) {
+-            while(networkUser.isConnected()) {
+-                String text = scanner.nextLine();
+-                networkUser.sendMessage(username + ": " + text);
+-            }
+-        } catch (IOException e) {
+-            System.out.println("Error sending message");
+-        }
+-    }
+-
+-    public String getUsername() {
+-        return username;
+-    }
+-}
