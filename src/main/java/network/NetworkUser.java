@@ -34,8 +34,6 @@ public class NetworkUser {
 
     // Connecta till server enl uppgifterna från settingwindow
     public void connect() {
-        if (userSession.getIp().startsWith("0")) return; // Skippa om default
-
         try {
             Socket socket = new Socket(userSession.getIp(), userSession.getTargetPort());
             System.out.println("Successfully connected to: " + userSession.getIp() + ":" + userSession.getTargetPort());

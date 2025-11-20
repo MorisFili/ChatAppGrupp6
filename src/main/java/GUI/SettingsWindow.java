@@ -4,6 +4,9 @@ package GUI;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -20,6 +23,7 @@ public class SettingsWindow {
     private final TextField ipAddress;
     private final TextField targetPort;
     private final TextField listenerPort;
+    private final CheckBox disableHost;
     private UserSession user;
     private final WindowManager windowManager;
     private final Scene scene;
@@ -44,12 +48,17 @@ public class SettingsWindow {
         targetPort.setMaxSize(50,10);
         button = new Button("Connect");
         button.setMinSize(75,10);
+        disableHost = new CheckBox("Disable hosting");
+
+        listenerPort.disableProperty().bind(disableHost.selectedProperty());
+
         HBox hBox = new HBox(usernameLabel, username, button);
-        HBox.setMargin(username, new Insets(0,10,0,0));
+        HBox.setMargin(username, new Insets(2,10,2,0));
         HBox hBoxM = new HBox(groupLabel, group);
         HBox hBoxU = new HBox(ipLabel, ipAddress, portLabel, targetPort);
-        HBox.setMargin(ipAddress, new Insets(0,5,0,0));
-        HBox hBoxUU = new HBox(listenerLabel, listenerPort);
+        HBox.setMargin(ipAddress, new Insets(2,5,2,0));
+        HBox hBoxUU = new HBox(listenerLabel, listenerPort, disableHost);
+        HBox.setMargin(listenerPort, new Insets(0,5,0,0));
         VBox vBox = new VBox(hBoxUU, hBoxU, hBoxM, hBox);
         BorderPane root = new BorderPane();
         root.setCenter(vBox);
@@ -74,8 +83,16 @@ public class SettingsWindow {
                             Integer.parseInt(listenerPort.getText()), Integer.parseInt(targetPort.getText()));
                     windowManager.showChat(user);
                     NetworkUser networkUser = new NetworkUser(user, windowManager.getChatWindow());
-                    networkUser.server();
-                    networkUser.connect();
+
+                    if (!disableHost.isSelected()) {
+                        networkUser.server();
+                    } else System.out.println("Hosting skipped.");
+
+                    if (!ipAddress.getText().startsWith("0")) {
+                        networkUser.connect();
+                    } else System.out.println("Invalid IP, connection skipped");
+
+
                     windowManager.getChatWindow().wireNetwork(networkUser);
 
                 } catch (NumberFormatException e) {
