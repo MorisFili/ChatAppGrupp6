@@ -4,6 +4,9 @@ package GUI;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -11,8 +14,6 @@ import javafx.scene.text.Font;
 import network.NetworkUser;
 import session.UserSession;
 
-import java.io.IOException;
-import java.net.Socket;
 
 public class SettingsWindow {
 
@@ -22,6 +23,7 @@ public class SettingsWindow {
     private final TextField ipAddress;
     private final TextField targetPort;
     private final TextField listenerPort;
+    private final CheckBox disableHost;
     private UserSession user;
     private final WindowManager windowManager;
     private final Scene scene;
@@ -29,7 +31,7 @@ public class SettingsWindow {
     public SettingsWindow(WindowManager windowManager) {
         this.windowManager = windowManager;
         Label usernameLabel = new Label("Username:     ");
-        Label groupLabel = new Label("Group:           "); // Lazy alignment
+        Label groupLabel = new Label("Group:           ");
         Label ipLabel = new Label("IP Address:    ");
         Label listenerLabel = new Label("Listener port: ");
         Label portLabel = new Label("Port: ");
@@ -41,17 +43,22 @@ public class SettingsWindow {
         username = new TextField();
         group = new TextField("default");
         ipAddress = new TextField("0.0.0.0");
-        listenerPort = new TextField("5050");
-        targetPort = new TextField("5050");
+        listenerPort = new TextField("443");
+        targetPort = new TextField("443");
         targetPort.setMaxSize(50,10);
         button = new Button("Connect");
         button.setMinSize(75,10);
+        disableHost = new CheckBox("Disable hosting");
+
+        listenerPort.disableProperty().bind(disableHost.selectedProperty());
+
         HBox hBox = new HBox(usernameLabel, username, button);
-        HBox.setMargin(username, new Insets(0,10,0,0));
+        HBox.setMargin(username, new Insets(2,10,2,0));
         HBox hBoxM = new HBox(groupLabel, group);
         HBox hBoxU = new HBox(ipLabel, ipAddress, portLabel, targetPort);
-        HBox.setMargin(ipAddress, new Insets(0,5,0,0));
-        HBox hBoxUU = new HBox(listenerLabel, listenerPort);
+        HBox.setMargin(ipAddress, new Insets(2,5,2,0));
+        HBox hBoxUU = new HBox(listenerLabel, listenerPort, disableHost);
+        HBox.setMargin(listenerPort, new Insets(0,5,0,0));
         VBox vBox = new VBox(hBoxUU, hBoxU, hBoxM, hBox);
         BorderPane root = new BorderPane();
         root.setCenter(vBox);
@@ -60,6 +67,7 @@ public class SettingsWindow {
         scene = new Scene(root);
 
         listenerSetup();
+
     }
 
     public void listenerSetup(){
@@ -71,25 +79,27 @@ public class SettingsWindow {
                 new Alert(Alert.AlertType.NONE, "Username missing.", ButtonType.OK).showAndWait();
             } else {
                 try {
-                    String userUsername = username.getText();
-                    String userIP = ipAddress.getText();
-                    int targetP = Integer.parseInt(targetPort.getText());
-
-                    Socket socket = new Socket(userIP, targetP);
-                    NetworkUser networkUser = new NetworkUser(socket);
-
-                    networkUser.sendMessage(userUsername);
                     user = new UserSession(username.getText(), group.getText(), ipAddress.getText(),
-                            Integer.parseInt(listenerPort.getText()), Integer.parseInt(targetPort.getText()), networkUser);
+                            Integer.parseInt(listenerPort.getText()), Integer.parseInt(targetPort.getText()));
                     windowManager.showChat(user);
+                    NetworkUser networkUser = new NetworkUser(user, windowManager.getChatWindow());
+
+                    if (!disableHost.isSelected()) {
+                        networkUser.server();
+                    } else System.out.println("Hosting skipped.");
+
+                    if (!ipAddress.getText().startsWith("0")) {
+                        networkUser.connect();
+                    } else System.out.println("Invalid IP, connection skipped");
+
+
+                    windowManager.getChatWindow().wireNetwork(networkUser);
 
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid host address format -> " + e.getMessage());
-                } catch (IOException e) {
-                    new Alert(Alert.AlertType.ERROR, "Could not connect to server at " + ipAddress.getText() + ":" + targetPort.getText() + ". Check if the server is running.", ButtonType.OK).showAndWait();
-                    System.out.println("Connection error: " + e.getMessage());
                 }
             }
+
         });
     }
 
