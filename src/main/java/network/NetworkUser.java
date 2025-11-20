@@ -12,6 +12,7 @@ import session.UserSession;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -34,13 +35,15 @@ public class NetworkUser {
 
     // Connecta till server enl uppgifterna från settingwindow
     public void connect() {
-        try {
-            Socket socket = new Socket(userSession.getIp(), userSession.getTargetPort());
-            System.out.println("Successfully connected to: " + userSession.getIp() + ":" + userSession.getTargetPort());
-            threadPool.submit(() -> socketHandler(socket));
-        } catch (IOException e) {
-            System.out.println("Connection failed: " + e.getMessage());
-        }
+        threadPool.submit(() -> {
+            try {
+                Socket socket = new Socket(userSession.getIp(), userSession.getTargetPort());
+                System.out.println("Successfully connected to: " + userSession.getIp() + ":" + userSession.getTargetPort());
+                threadPool.submit(() -> socketHandler(socket));
+            } catch (IOException e) {
+                System.out.println("Connection failed: " + e.getMessage());
+            }
+        });
     }
 
 
@@ -104,7 +107,7 @@ public class NetworkUser {
 
             String line;
             while ((line = in.readLine()) != null) {
-                if (line.startsWith("killswitch")){
+                if (line.startsWith("killswitch")) {
                     String[] username = line.split(":");
                     sendSYS(new SystemMessage(userSession.getUsername(), " was kicked by " + username[1]));
                     terminateNetwork();
@@ -119,7 +122,7 @@ public class NetworkUser {
                 if (line.startsWith("SYS:")) {
                     SystemMessage sys = SystemMessage.deserializeMSG(line);
                     Platform.runLater(() -> chatWindow.getMainBody().getChildren().add(sys));
-                    if (sys.getContent().contains("disconnected")){
+                    if (sys.getContent().contains("disconnected")) {
                         connections.get(sys.getUsername()).close();
                         peers.get(sys.getUsername()).close();
                         connections.remove(sys.getUsername());
@@ -152,8 +155,8 @@ public class NetworkUser {
         }
     }
 
-    public void sendLine(PrintWriter out, String line){
-        if (out == null){
+    public void sendLine(PrintWriter out, String line) {
+        if (out == null) {
             System.out.println("User already disconnected or you are sending to yourself");
             return;
         }
@@ -175,6 +178,9 @@ public class NetworkUser {
             connection.close();
         }
         if (server != null) server.close();
+
+        threadPool.shutdown();
+        Platform.exit();
     }
 
     public Map<String, PrintWriter> getPeers() {

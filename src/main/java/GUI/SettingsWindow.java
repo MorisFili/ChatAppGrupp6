@@ -31,7 +31,7 @@ public class SettingsWindow {
     public SettingsWindow(WindowManager windowManager) {
         this.windowManager = windowManager;
         Label usernameLabel = new Label("Username:     ");
-        Label groupLabel = new Label("Group:           "); // Lazy alignment
+        Label groupLabel = new Label("Group:           ");
         Label ipLabel = new Label("IP Address:    ");
         Label listenerLabel = new Label("Listener port: ");
         Label portLabel = new Label("Port: ");
@@ -43,8 +43,8 @@ public class SettingsWindow {
         username = new TextField();
         group = new TextField("default");
         ipAddress = new TextField("0.0.0.0");
-        listenerPort = new TextField("5050");
-        targetPort = new TextField("5050");
+        listenerPort = new TextField("443");
+        targetPort = new TextField("443");
         targetPort.setMaxSize(50,10);
         button = new Button("Connect");
         button.setMinSize(75,10);
