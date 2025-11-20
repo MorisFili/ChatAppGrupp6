@@ -1,5 +1,7 @@
 package GUI;
 
+import database.IMessageRepository;
+import database.MessageRepository;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,6 +29,7 @@ public class ChatWindow {
     private final TextFlow mainBody;
     private UserSession user;
     private NetworkUser network;
+    private final IMessageRepository messageRepository = new MessageRepository();
 
     public ChatWindow(WindowManager windowManager){
         this.windowManager = windowManager;
@@ -68,6 +71,7 @@ public class ChatWindow {
             TextNode msg = new TextNode(user.getUsername(), LocalDateTime.now(), inputText.getText());
             mainBody.getChildren().add(msg);
             network.sendMSG(msg);
+            messageRepository.saveMessage(msg);
             inputText.clear();
 
         });
