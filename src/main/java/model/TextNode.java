@@ -40,6 +40,7 @@ public class TextNode extends Text {
         delete.setOnAction(x -> {
             // Delete logic
             setText("Message has been deleted by: " + ChatWindow.instance.getUser().getUsername() + "\n");
+            ChatWindow.instance.getRepository().deleteMessage(this);
         });
 
         copy.setOnAction(x -> {

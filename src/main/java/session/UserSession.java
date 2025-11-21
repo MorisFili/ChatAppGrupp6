@@ -1,7 +1,6 @@
 package session;
 
 import model.TextNode;
-import network.NetworkUser;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,18 +16,14 @@ public class UserSession {
     private final int listenerPort;
 
     private final List<TextNode> chatLog = Collections.synchronizedList(new ArrayList<>());
-    private final NetworkUser networkUser;
 
-    public UserSession(String username, String group, String ip, int listenerPort, int targetPort, NetworkUser networkUser) {
+    public UserSession(String username, String group, String ip, int listenerPort, int targetPort) {
         this.username = username;
         this.group = group;
         this.ip = ip;
         this.listenerPort = listenerPort;
         this.targetPort = targetPort;
-        this.networkUser = networkUser;
     }
-
-    public NetworkUser getNetworkUser() { return networkUser; }
 
     public String getUsername() {
         return username;

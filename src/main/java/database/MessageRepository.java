@@ -1,70 +1,81 @@
 package database;
 
-import javafx.scene.Node;
+import GUI.ChatWindow;
 import model.TextNode;
 
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.stream.IntStream;
+
 
 public class MessageRepository implements IMessageRepository {
-    private final File file = new File("Messages.txt");
+    private final File file = new File(ChatWindow.instance.getUser().getGroup() + ".txt");
 
     @Override
-    public void saveMessage(TextNode message) {
-        String fileName = file.getName();
+    public void saveMessage(TextNode textNode) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+            String message = textNode.getContent() + textNode.getUsername() + textNode.getTimestamp();
 
-            String content = message.getContent();
-            String username = message.getUsername();
-            String timestamp = String.valueOf(message.getTimestamp());
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
+            SecretKey key = keyGenerator.generateKey();
 
-            writer
-                    .append(content)
-                    .append("\n")
-                    .append(username)
-                    .append("\n")
-                    .append(timestamp)
-                    .append("\n");
+            Cipher deCipher = Cipher.getInstance("DES");
+
+            byte[] text = message.getBytes(StandardCharsets.UTF_8);
+
+            deCipher.init(Cipher.ENCRYPT_MODE, key);
+            byte[] encryptedText = deCipher.doFinal(text);
+
+            String encryption = new String(encryptedText);
+
+            writer.append(encryption + "\n");
 
         } catch (IOException e) {
             System.out.println("Error occurred while writing in file file.");
             e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void deleteMessage(String username, String content) throws Exception {
-        Path filePath = Path.of(file.toURI());
+    public void deleteMessage(TextNode message) {
 
-        // Reads all lines into memory
-        List<String> fileLines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+        ChatWindow.instance.getUser().getChatLog().remove(message);
 
-        // Finds the index of line to be deleted based on Content/Message AND Username
-        int startIndex = IntStream.range(0, fileLines.size())
-                .filter(i -> fileLines.get(i).trim().equals(content.trim()) && fileLines.get(i + 1).trim().equals(username.trim()))
-                .findFirst()
-                .orElse(-1);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
 
-        if (startIndex == -1) {
-            System.out.println("Message content not found: " + content);
-            return;
+            for (TextNode msg : ChatWindow.instance.getUser().getChatLog()) {
+
+                String msgs = msg.getContent() + msg.getUsername() + msg.getTimestamp();
+
+                KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
+                SecretKey key = keyGenerator.generateKey();
+
+                Cipher deCipher = Cipher.getInstance("DES");
+
+                byte[] text = msgs.getBytes(StandardCharsets.UTF_8);
+
+                deCipher.init(Cipher.ENCRYPT_MODE, key);
+                byte[] encryptedText = deCipher.doFinal(text);
+
+                String encryption = new String(encryptedText);
+
+                writer.append(encryption + "\n");
+
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error occurred while writing in file file.");
+            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
-        // Filters and Rewrite
-        List<String> updatedLines = IntStream.range(0, fileLines.size())
-                .filter(i -> i != startIndex && i != startIndex + 1 && i != startIndex + 2)
-                .mapToObj(fileLines::get)
-                .toList();
-
-        // Overwrites the original file
-        Files.write( filePath, updatedLines );
     }
 }

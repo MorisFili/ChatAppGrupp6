@@ -12,7 +12,6 @@ import session.UserSession;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -132,6 +131,7 @@ public class NetworkUser {
                 if (line.startsWith("MSG:")) {
                     TextNode msg = TextNode.deserializeMSG(line);
                     userSession.getChatLog().add(msg);
+                    chatWindow.getRepository().saveMessage(msg);
                     Platform.runLater(() -> chatWindow.getMainBody().getChildren().add(msg));
                 }
             }
@@ -144,6 +144,8 @@ public class NetworkUser {
     }
 
     public void sendMSG(TextNode msg) {
+        userSession.getChatLog().add(msg);
+        chatWindow.getRepository().saveMessage(msg);
         for (PrintWriter pw : peers.values()) {
             pw.println(msg.serializeMSG());
         }

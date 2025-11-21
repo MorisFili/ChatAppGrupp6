@@ -5,5 +5,5 @@ import model.TextNode;
 
 public interface IMessageRepository {
     void saveMessage(TextNode message);
-    void deleteMessage(String username, String content) throws Exception;
+    void deleteMessage(TextNode message);
 }
