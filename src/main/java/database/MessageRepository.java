@@ -1,6 +1,7 @@
 package database;
 
-import model.TextNode;
+import GUI.ChatWindow;
+import core.TextMessage;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -11,15 +12,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class MessageRepository implements IMessageRepository{
 
-    private final File file = new File("Messages.txt");
+public class MessageRepository implements IMessageRepository {
+    private final File file = new File(ChatWindow.instance.getUserSession().getGroup() + ".txt");
 
     @Override
-    public void saveMessage(TextNode textNode) {
+    public void saveMessage(TextMessage textMessage) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
 
-            String message = textNode.getContent() + textNode.getUsername() + textNode.getTimestamp();
+            String message = textMessage.getContent() + textMessage.getUsername() + textMessage.getTimestamp();
 
             KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
             SecretKey key = keyGenerator.generateKey();
@@ -34,6 +35,41 @@ public class MessageRepository implements IMessageRepository{
             String encryption = new String(encryptedText);
 
             writer.append(encryption + "\n");
+
+        } catch (IOException e) {
+            System.out.println("Error occurred while writing in file file.");
+            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteMessage(TextMessage message) {
+
+        ChatWindow.instance.getUserSession().getChatLog().remove(message);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
+
+            for (TextMessage msg : ChatWindow.instance.getUserSession().getChatLog()) {
+
+                String msgs = msg.getContent() + msg.getUsername() + msg.getTimestamp();
+
+                KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
+                SecretKey key = keyGenerator.generateKey();
+
+                Cipher deCipher = Cipher.getInstance("DES");
+
+                byte[] text = msgs.getBytes(StandardCharsets.UTF_8);
+
+                deCipher.init(Cipher.ENCRYPT_MODE, key);
+                byte[] encryptedText = deCipher.doFinal(text);
+
+                String encryption = new String(encryptedText);
+
+                writer.append(encryption + "\n");
+
+            }
 
         } catch (IOException e) {
             System.out.println("Error occurred while writing in file file.");

@@ -1,0 +1,48 @@
+package service;
+
+import core.Message;
+import core.SystemMessage;
+import core.TextMessage;
+import network.Network;
+import service.netCommands.*;
+import utils.AutoInject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Commands {
+
+    List<netCommand> commands = new ArrayList<>();
+
+    @Command KILL kill;
+    @Command MSG msg;
+    @Command OK ok;
+    @Command SYS sys;
+
+    public Commands(Network network){
+        AutoInject autoInject = new AutoInject();
+        autoInject.register(this, network);
+
+    }
+
+    public void inbound(String line){
+        String[] args = line.trim().split(":");
+
+        switch (args[0]){
+            case "KILL" -> kill.in(line);
+            case "SYS" -> sys.in(line);
+            case "MSG" -> msg.in(line);
+            case "OK" -> ok.in(line);
+        }
+    }
+
+    public void outbound(Message message){
+        if (message instanceof TextMessage textMessage) msg.out(textMessage);
+        if (message instanceof SystemMessage systemMessage) sys.out(systemMessage);
+    }
+
+
+    public List<netCommand> getCommands() {
+        return commands;
+    }
+}

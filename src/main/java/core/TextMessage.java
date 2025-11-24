@@ -1,4 +1,4 @@
-package model;
+package core;
 
 import GUI.ChatWindow;
 import javafx.scene.control.ContextMenu;
@@ -7,21 +7,17 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class TextNode extends Text {
-    private final String username;
-    private final LocalDateTime timestamp;
-    private final String content;
+public class TextMessage extends Message {
 
-    public TextNode(String username, LocalDateTime timestamp, String content) {
-        this.content = content;
-        this.username = username;
-        this.timestamp = timestamp;
+    private LocalDateTime timestamp = LocalDateTime.now();
+
+    public TextMessage(String username, String content) {
+        super(username, content);
 
         setFont(Font.font("Segoe UI Emoji", 12));
         setText("[" + timestamp.format(DateTimeFormatter.ofPattern("dd MMM HH:mm")) + "] " + username + ": " + content + "\n");
@@ -34,12 +30,13 @@ public class TextNode extends Text {
 
         kick.setOnAction(x -> {
             PrintWriter target = ChatWindow.instance.getNetwork().getPeers().get(username);
-            ChatWindow.instance.getNetwork().sendLine(target, "killswitch:" + ChatWindow.instance.getUser().getUsername());
+            ChatWindow.instance.getNetwork().sendLine(target, "KILL:" + ChatWindow.instance.getUserSession().getUsername());
         });
 
         delete.setOnAction(x -> {
             // Delete logic
-            setText("Message has been deleted by: " + ChatWindow.instance.getUser().getUsername() + "\n");
+            setText("Message has been deleted by: " + ChatWindow.instance.getUserSession().getUsername() + "\n");
+            ChatWindow.instance.getRepository().deleteMessage(this);
         });
 
         copy.setOnAction(x -> {
@@ -53,29 +50,14 @@ public class TextNode extends Text {
         setOnMouseClicked(x -> {
             if (x.getButton() == MouseButton.SECONDARY) menu.show(this, x.getScreenX(), x.getScreenY());
         });
-
-
-
     }
   
-    public String serializeMSG(){
-        return "MSG:" + username + "|" + content;
-    }
-
-    public static TextNode deserializeMSG(String msg) {
-        String[] p = msg.substring(4).split("\\|");
-        return new TextNode(p[0], LocalDateTime.now(), p[1]);
-    }
-
-    public String getUsername() {
-        return username;
+    public String serialize(){
+        return "MSG:" + username + ":" + content;
     }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public String getContent() {
-        return content;
-    }
 }

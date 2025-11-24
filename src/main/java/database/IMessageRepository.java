@@ -1,7 +1,8 @@
 package database;
 
-import model.TextNode;
+import core.TextMessage;
 
 public interface IMessageRepository {
-    void saveMessage(TextNode message);
+    void saveMessage(TextMessage message);
+    void deleteMessage(TextMessage message);
 }

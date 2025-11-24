@@ -13,23 +13,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
-import model.TextNode;
-import network.NetworkUser;
-import session.UserSession;
-
-import java.time.LocalDateTime;
+import core.TextMessage;
+import network.Network;
+import network.UserSession;
 
 public class ChatWindow {
 
     private final WindowManager windowManager;
     public static ChatWindow instance; // Singleton instance
+    private IMessageRepository repository;
     private final Scene scene;
     private final Button send;
     private final TextArea inputText;
     private final TextFlow mainBody;
-    private UserSession user;
-    private NetworkUser network;
-    private final IMessageRepository messageRepository = new MessageRepository();
+    private UserSession userSession;
+    private Network network;
 
     public ChatWindow(WindowManager windowManager){
         this.windowManager = windowManager;
@@ -68,12 +66,12 @@ public class ChatWindow {
         // Button click
         send.setOnAction(x -> {
             if (inputText.getText().isEmpty()) x.consume();
-            TextNode msg = new TextNode(user.getUsername(), LocalDateTime.now(), inputText.getText());
+            String username = userSession.getUsername();
+            String content = inputText.getText();
+            TextMessage msg = new TextMessage(username, content);
             mainBody.getChildren().add(msg);
-            network.sendMSG(msg);
-            messageRepository.saveMessage(msg);
+            network.send(msg);
             inputText.clear();
-
         });
 
         // Text area interceptor för 'enter'
@@ -85,7 +83,7 @@ public class ChatWindow {
         });
     }
 
-    public void wireNetwork(NetworkUser network){
+    public void wireNetwork(Network network){
         this.network = network;
     }
 
@@ -93,19 +91,27 @@ public class ChatWindow {
         return scene;
     }
 
-    public void setUser(UserSession user) {
-        this.user = user;
+    public void setUserSession(UserSession userSession) {
+        this.userSession = userSession;
     }
 
-    public UserSession getUser() {
-        return user;
+    public UserSession getUserSession() {
+        return userSession;
     }
 
     public TextFlow getMainBody() {
         return mainBody;
     }
 
-    public NetworkUser getNetwork() {
+    public Network getNetwork() {
         return network;
+    }
+
+    public IMessageRepository getRepository() {
+        return repository;
+    }
+
+    public void initRepo() {
+        this.repository = new MessageRepository();
     }
 }
