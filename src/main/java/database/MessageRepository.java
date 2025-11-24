@@ -1,7 +1,7 @@
 package database;
 
 import GUI.ChatWindow;
-import model.TextNode;
+import core.TextMessage;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -14,13 +14,13 @@ import java.nio.charset.StandardCharsets;
 
 
 public class MessageRepository implements IMessageRepository {
-    private final File file = new File(ChatWindow.instance.getUser().getGroup() + ".txt");
+    private final File file = new File(ChatWindow.instance.getUserSession().getGroup() + ".txt");
 
     @Override
-    public void saveMessage(TextNode textNode) {
+    public void saveMessage(TextMessage textMessage) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
 
-            String message = textNode.getContent() + textNode.getUsername() + textNode.getTimestamp();
+            String message = textMessage.getContent() + textMessage.getUsername() + textMessage.getTimestamp();
 
             KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
             SecretKey key = keyGenerator.generateKey();
@@ -45,13 +45,13 @@ public class MessageRepository implements IMessageRepository {
     }
 
     @Override
-    public void deleteMessage(TextNode message) {
+    public void deleteMessage(TextMessage message) {
 
-        ChatWindow.instance.getUser().getChatLog().remove(message);
+        ChatWindow.instance.getUserSession().getChatLog().remove(message);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
 
-            for (TextNode msg : ChatWindow.instance.getUser().getChatLog()) {
+            for (TextMessage msg : ChatWindow.instance.getUserSession().getChatLog()) {
 
                 String msgs = msg.getContent() + msg.getUsername() + msg.getTimestamp();
 

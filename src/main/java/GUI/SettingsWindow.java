@@ -1,6 +1,7 @@
 package GUI;
 
 
+import database.MessageRepository;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -8,11 +9,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import network.NetworkUser;
-import session.UserSession;
-
-import java.io.IOException;
-import java.net.Socket;
+import network.Network;
+import network.UserSession;
 
 public class SettingsWindow {
 
@@ -42,8 +40,8 @@ public class SettingsWindow {
         username = new TextField();
         group = new TextField("default");
         ipAddress = new TextField("0.0.0.0");
-        listenerPort = new TextField("443");
-        targetPort = new TextField("443");
+        listenerPort = new TextField("5050");
+        targetPort = new TextField("5050");
         targetPort.setMaxSize(50,10);
         button = new Button("Connect");
         button.setMinSize(75,10);
@@ -81,18 +79,19 @@ public class SettingsWindow {
                     user = new UserSession(username.getText(), group.getText(), ipAddress.getText(),
                             Integer.parseInt(listenerPort.getText()), Integer.parseInt(targetPort.getText()));
                     windowManager.showChat(user);
-                    NetworkUser networkUser = new NetworkUser(user, windowManager.getChatWindow());
+                    Network network = new Network(user, windowManager.getChatWindow());
 
                     if (!disableHost.isSelected()) {
-                        networkUser.server();
+                        network.server();
                     } else System.out.println("Hosting skipped.");
 
                     if (!ipAddress.getText().startsWith("0")) {
-                        networkUser.connect();
-                    } else System.out.println("Invalid IP, connection skipped");
+                        network.connect();
+                    } else System.out.println("Connection skipped");
 
 
-                    windowManager.getChatWindow().wireNetwork(networkUser);
+                    windowManager.getChatWindow().wireNetwork(network);
+                    windowManager.getChatWindow().initRepo();
 
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid host address format -> " + e.getMessage());

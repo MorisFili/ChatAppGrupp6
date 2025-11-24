@@ -1,6 +1,6 @@
-package session;
+package network;
 
-import model.TextNode;
+import core.TextMessage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +15,7 @@ public class UserSession {
     private final int targetPort;
     private final int listenerPort;
 
-    private final List<TextNode> chatLog = Collections.synchronizedList(new ArrayList<>());
+    private final List<TextMessage> chatLog = Collections.synchronizedList(new ArrayList<>());
 
     public UserSession(String username, String group, String ip, int listenerPort, int targetPort) {
         this.username = username;
@@ -33,7 +33,7 @@ public class UserSession {
         return group;
     }
 
-    public List<TextNode> getChatLog() {
+    public List<TextMessage> getChatLog() {
         return chatLog;
     }
 

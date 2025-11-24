@@ -4,15 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7febb996-4861-4739-beb1-eb08210254a4" name="Changes" comment="changed default port to 443, threading fix">
+    <list default="true" id="7febb996-4861-4739-beb1-eb08210254a4" name="Changes" comment="encryption, save, delete">
+      <change afterPath="$PROJECT_DIR$/src/main/java/core/Message.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/service/Command.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/service/Commands.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/KILL.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/MSG.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/OK.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/SYS.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/netCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/utils/AutoRegister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/GUI/ChatWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI/ChatWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/GUI/SettingsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI/SettingsWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/WindowManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI/WindowManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/database/IMessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/IMessageRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/database/MessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/MessageRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/TextNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/TextNode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/network/NetworkUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/network/NetworkUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/session/UserSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/session/UserSession.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/SystemMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/core/SystemMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/TextNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/core/TextMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/network/NetworkUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/network/Network.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/session/UserSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/network/UserSession.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +34,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -43,7 +56,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/MorisFili/ChatAppGrupp6.git&quot;,
-    &quot;accountId&quot;: &quot;447d4086-538f-431a-93f8-b1700e457490&quot;
+    &quot;accountId&quot;: &quot;9d10634c-6134-4b32-a212-ed268a19fd3d&quot;
   },
   &quot;editorReviewEnabled&quot;: false
 }</component>
@@ -78,7 +91,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "preferences.keymap",
@@ -117,14 +130,6 @@
       <method v="2" />
     </configuration>
   </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26199.169" />
-        <option value="bundled-js-predefined-d6986cc7102b-9c94529fcfe0-JavaScript-IU-252.26199.169" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="7febb996-4861-4739-beb1-eb08210254a4" name="Changes" comment="" />
@@ -137,7 +142,10 @@
       <workItem from="1763566166931" duration="210000" />
       <workItem from="1763566406939" duration="1489000" />
       <workItem from="1763590893976" duration="7215000" />
-      <workItem from="1763716567604" duration="3248000" />
+      <workItem from="1763716567604" duration="4743000" />
+      <workItem from="1763723442262" duration="7000" />
+      <workItem from="1763725413848" duration="2552000" />
+      <workItem from="1763975225128" duration="17620000" />
     </task>
     <task id="LOCAL-00001" summary="debug complete">
       <option name="closed" value="true" />
@@ -171,7 +179,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763632038660</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="encryption, save, delete">
+      <option name="closed" value="true" />
+      <created>1763720193131</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1763720193131</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -182,6 +198,7 @@
     <MESSAGE value="smileys (basic), kick, copy, delete message implementerat" />
     <MESSAGE value="disable hosting button" />
     <MESSAGE value="changed default port to 443, threading fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="changed default port to 443, threading fix" />
+    <MESSAGE value="encryption, save, delete" />
+    <option name="LAST_COMMIT_MESSAGE" value="encryption, save, delete" />
   </component>
 </project>
