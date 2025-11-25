@@ -1,6 +1,6 @@
 package database;
 
-import GUI.ChatWindow;
+import UI.ChatWindow;
 import core.TextMessage;
 
 import javax.crypto.Cipher;

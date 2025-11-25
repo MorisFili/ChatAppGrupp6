@@ -1,6 +1,7 @@
 package core;
 
-import GUI.ChatWindow;
+import UI.ChatWindow;
+
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.Clipboard;
@@ -8,7 +9,6 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.Font;
 
-import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -24,14 +24,14 @@ public class TextMessage extends Message {
 
         // Right-click menu
         ContextMenu menu = new ContextMenu();
+        MenuItem pm = new MenuItem("PM");
         MenuItem delete = new MenuItem("Delete");
         MenuItem copy = new MenuItem("Copy");
         MenuItem kick = new MenuItem("Kick" + " " + username);
 
-        kick.setOnAction(x -> {
-            PrintWriter target = ChatWindow.instance.getNetwork().getPeers().get(username);
-            ChatWindow.instance.getNetwork().sendLine(target, "KILL:" + ChatWindow.instance.getUserSession().getUsername());
-        });
+        pm.setOnAction(x -> ChatWindow.instance.getInputText().setText("@" + username + " "));
+
+        kick.setOnAction(x -> ChatWindow.instance.getNetwork().sendLine(username, "KILL:" + ChatWindow.instance.getUserSession().getUsername()));
 
         delete.setOnAction(x -> {
             // Delete logic
@@ -46,7 +46,7 @@ public class TextMessage extends Message {
 
         });
 
-        menu.getItems().addAll(delete, copy, kick);
+        menu.getItems().addAll(pm, delete, copy, kick);
         setOnMouseClicked(x -> {
             if (x.getButton() == MouseButton.SECONDARY) menu.show(this, x.getScreenX(), x.getScreenY());
         });

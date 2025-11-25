@@ -8,7 +8,7 @@ public abstract class Message extends Text {
 
 
 
-    protected Message(String username, String content) {
+    public Message(String username, String content) {
         this.username = username;
         this.content = content;
     }

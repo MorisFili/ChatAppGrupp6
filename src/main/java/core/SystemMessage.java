@@ -14,7 +14,7 @@ public class SystemMessage extends Message {
     public SystemMessage(String username, String content) {
         super(username, content);
         setFill(Color.DARKGREEN);
-        setFont(Font.font("System", FontWeight.BOLD, 10));
+        setFont(Font.font("Segoe UI Emoji", FontWeight.BOLD, 12));
         setText("[" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + "] " +
                 "SYSTEM" + ": " + username + " " + content + "\n");
     }

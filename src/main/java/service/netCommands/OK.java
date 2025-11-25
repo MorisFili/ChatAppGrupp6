@@ -12,7 +12,7 @@ public class OK extends netCommand {
 
     @Override
     public void in(String line) {
-        String[] msg = line.split(":");
+        String[] msg = line.split(":",2);
         String username = msg[1];
         String content = "has connected.";
         SystemMessage message = new SystemMessage(username, content);
