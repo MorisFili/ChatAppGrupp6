@@ -33,9 +33,7 @@ public class TYPING extends netCommand {
                         remove(ChatWindow.instance.getIndicators().get(username));
                 ChatWindow.instance.getIndicators().remove(username);
             });
-
         }
-
     }
 
     @Override

@@ -85,7 +85,7 @@ public class SettingsWindow {
                     } else System.out.println("Hosting skipped.");
 
                     if (!ipAddress.getText().startsWith("0")) {
-                        network.connect();
+                        network.connect(user.getIp(), user.getTargetPort());
                     } else System.out.println("Connection skipped");
 
 
