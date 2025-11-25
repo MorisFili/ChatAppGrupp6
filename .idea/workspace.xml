@@ -5,26 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7febb996-4861-4739-beb1-eb08210254a4" name="Changes" comment="encryption, save, delete">
-      <change afterPath="$PROJECT_DIR$/src/main/java/core/Message.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/service/Command.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/service/Commands.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/KILL.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/MSG.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/OK.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/SYS.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/netCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/utils/AutoRegister.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/ChatWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI/ChatWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/SettingsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI/SettingsWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/WindowManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI/WindowManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/database/IMessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/IMessageRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/database/MessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/MessageRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/SystemMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/core/SystemMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/TextNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/core/TextMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/network/NetworkUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/network/Network.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/session/UserSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/network/UserSession.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,13 +36,13 @@
     &quot;assignee&quot;: &quot;MorisFili&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/MorisFili/ChatAppGrupp6.git&quot;,
-    &quot;accountId&quot;: &quot;9d10634c-6134-4b32-a212-ed268a19fd3d&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/MorisFili/ChatAppGrupp6.git",
+    "accountId": "d9849d93-5855-4330-90b9-5a54c0d21ab4"
   },
-  &quot;editorReviewEnabled&quot;: false
-}</component>
+  "editorReviewEnabled": false
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -74,31 +57,62 @@
     <option name="showMembers" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Application.Main.executor": "Run",
-    "Maven.ChatAppGrupp6 [javafx:run].executor": "Run",
-    "Maven.Main.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "GUI-Branch",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.ChatAppGrupp6 [javafx:run].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.Main (1).executor&quot;: &quot;Run&quot;,
+    &quot;Maven.Main.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;GUI-Branch&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RunManager" selected="Maven.Main (1)">
+    <configuration name="Main (1)" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="javafx:run" />
+              </list>
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
     <configuration name="Main" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -129,6 +143,10 @@
       </MavenSettings>
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Maven.Main" />
+      <item itemvalue="Maven.Main (1)" />
+    </list>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
