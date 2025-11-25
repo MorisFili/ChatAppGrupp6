@@ -1,8 +1,7 @@
 package network;
 
-import GUI.ChatWindow;
+import UI.ChatWindow;
 import core.Message;
-import core.SystemMessage;
 import core.TextMessage;
 import javafx.application.Platform;
 import service.Commands;
@@ -135,7 +134,8 @@ public class Network {
         } else commands.outbound(msg);
     }
 
-    public void sendLine(PrintWriter out, String line) {
+    public void sendLine(String receiver, String line) {
+        PrintWriter out = ChatWindow.instance.getNetwork().getPeers().get(receiver);
         if (out == null) {
             System.out.println("User already disconnected or you are sending to yourself");
             return;
@@ -156,6 +156,7 @@ public class Network {
         }
 
         threadPool.shutdown();
+        chatWindow.getTimer().shutdown();
         Platform.exit();
     }
 

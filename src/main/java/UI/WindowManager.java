@@ -1,4 +1,4 @@
-package GUI;
+package UI;
 
 import javafx.stage.Stage;
 import network.UserSession;

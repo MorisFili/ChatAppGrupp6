@@ -3,6 +3,7 @@ package service;
 import core.Message;
 import core.SystemMessage;
 import core.TextMessage;
+import core.TypingIndicator;
 import network.Network;
 import service.netCommands.*;
 import utils.AutoInject;
@@ -18,6 +19,7 @@ public class Commands {
     @Command MSG msg;
     @Command OK ok;
     @Command SYS sys;
+    @Command TYPING typing;
 
     public Commands(Network network){
         AutoInject autoInject = new AutoInject();
@@ -33,12 +35,14 @@ public class Commands {
             case "SYS" -> sys.in(line);
             case "MSG" -> msg.in(line);
             case "OK" -> ok.in(line);
+            case "TYPING" -> typing.in(line);
         }
     }
 
     public void outbound(Message message){
         if (message instanceof TextMessage textMessage) msg.out(textMessage);
         if (message instanceof SystemMessage systemMessage) sys.out(systemMessage);
+        if (message instanceof TypingIndicator typingIndicator) typing.out(typingIndicator);
     }
 
 
