@@ -1,6 +1,5 @@
-import GUI.WindowManager;
+import UI.WindowManager;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 
 

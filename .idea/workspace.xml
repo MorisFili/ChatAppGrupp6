@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7febb996-4861-4739-beb1-eb08210254a4" name="Changes" comment="disable hosting button">
+    <list default="true" id="7febb996-4861-4739-beb1-eb08210254a4" name="Changes" comment="typing indicator, chat message sound">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Messages.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +15,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -37,7 +37,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/MorisFili/ChatAppGrupp6.git&quot;,
-    &quot;accountId&quot;: &quot;d9849d93-5855-4330-90b9-5a54c0d21ab4&quot;
+    &quot;accountId&quot;: &quot;9d10634c-6134-4b32-a212-ed268a19fd3d&quot;
   },
   &quot;editorReviewEnabled&quot;: false
 }</component>
@@ -55,32 +55,32 @@
     <option name="showMembers" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Application.Main.executor": "Run",
-    "Maven.ChatAppGrupp6 [javafx:run].executor": "Run",
-    "Maven.Main (1).executor": "Run",
-    "Maven.Main.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "database-setup",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.ChatAppGrupp6 [javafx:run].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.Main (1).executor&quot;: &quot;Run&quot;,
+    &quot;Maven.Main.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;GUI-Branch&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="Maven.Main (1)">
+}</component>
+  <component name="RunManager" selected="Maven.Main">
     <configuration name="Main (1)" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -157,7 +157,11 @@
       <workItem from="1763502457186" duration="28172000" />
       <workItem from="1763566166931" duration="210000" />
       <workItem from="1763566406939" duration="1489000" />
-      <workItem from="1763590893976" duration="5866000" />
+      <workItem from="1763590893976" duration="7215000" />
+      <workItem from="1763716567604" duration="4743000" />
+      <workItem from="1763723442262" duration="7000" />
+      <workItem from="1763725413848" duration="2552000" />
+      <workItem from="1763975225128" duration="44706000" />
     </task>
     <task id="LOCAL-00001" summary="debug complete">
       <option name="closed" value="true" />
@@ -183,7 +187,39 @@
       <option name="project" value="LOCAL" />
       <updated>1763628219028</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="changed default port to 443, threading fix">
+      <option name="closed" value="true" />
+      <created>1763632038660</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1763632038660</updated>
+    </task>
+    <task id="LOCAL-00005" summary="encryption, save, delete">
+      <option name="closed" value="true" />
+      <created>1763720193131</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1763720193131</updated>
+    </task>
+    <task id="LOCAL-00006" summary="extracted network commands into a new service package. autoinjected. overall better OOP">
+      <option name="closed" value="true" />
+      <created>1763999240134</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1763999240134</updated>
+    </task>
+    <task id="LOCAL-00007" summary="typing indicator, chat message sound">
+      <option name="closed" value="true" />
+      <created>1764081697701</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1764081697701</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -193,6 +229,10 @@
     <MESSAGE value="debug complete" />
     <MESSAGE value="smileys (basic), kick, copy, delete message implementerat" />
     <MESSAGE value="disable hosting button" />
-    <option name="LAST_COMMIT_MESSAGE" value="disable hosting button" />
+    <MESSAGE value="changed default port to 443, threading fix" />
+    <MESSAGE value="encryption, save, delete" />
+    <MESSAGE value="extracted network commands into a new service package. autoinjected. overall better OOP" />
+    <MESSAGE value="typing indicator, chat message sound" />
+    <option name="LAST_COMMIT_MESSAGE" value="typing indicator, chat message sound" />
   </component>
 </project>

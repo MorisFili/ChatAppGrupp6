@@ -1,8 +1,11 @@
 package database;
 
-import javafx.scene.Node;
-import model.TextNode;
+import core.TextMessage;
+
+import java.util.List;
 
 public interface IMessageRepository {
-    void saveMessage(TextNode message);
+    void saveMessage(TextMessage message);
+    void deleteMessage(TextMessage message);
+    List<TextMessage> loadMessages();
 }

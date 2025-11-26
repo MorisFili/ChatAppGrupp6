@@ -1,7 +1,7 @@
-package GUI;
+package UI;
 
 import javafx.stage.Stage;
-import session.UserSession;
+import network.UserSession;
 
 public class WindowManager {
 
@@ -20,16 +20,9 @@ public class WindowManager {
     }
 
     public void showChat(UserSession session){
-        chatWindow.setUser(session);
+        chatWindow.setUserSession(session);
         stage.setTitle("Chat session - " + session.getUsername());
         stage.setScene(chatWindow.getScene());
-    }
-
-    public void terminatePool() {
-        if (chatWindow.getNetwork() == null) return;
-        if (chatWindow.getNetwork().threadPool != null) {
-            chatWindow.getNetwork().threadPool.shutdown();
-        }
     }
 
     public ChatWindow getChatWindow() {
