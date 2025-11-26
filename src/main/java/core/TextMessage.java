@@ -17,7 +17,7 @@ public class TextMessage extends Message {
     private LocalDateTime timestamp = LocalDateTime.now();
 
     public TextMessage(String username, String content) {
-        super(username, content);
+        this(username, content, LocalDateTime.now());
 
         setFont(Font.font("Segoe UI Emoji", 12));
         setText("[" + timestamp.format(DateTimeFormatter.ofPattern("dd MMM HH:mm")) + "] " + username + ": " + content + "\n");
@@ -51,7 +51,39 @@ public class TextMessage extends Message {
             if (x.getButton() == MouseButton.SECONDARY) menu.show(this, x.getScreenX(), x.getScreenY());
         });
     }
-  
+
+    public TextMessage(String username, String content, LocalDateTime timestamp) {
+        super(username, content);
+        this.timestamp = timestamp;
+
+        setFont(Font.font("Segoe UI Emoji", 12));
+        setText("[" + timestamp.format(DateTimeFormatter.ofPattern("dd MMM HH:mm")) + "] " + username + ": " + content + "\n");
+    }
+
+    public static String serializeForFile(TextMessage message) {
+        return message.getUsername() + "|" + message.getTimestamp().toString() + "|" + message.getContent();
+    }
+
+    public static TextMessage deserializeFromFile(String decryptedMessage) {
+        String[] parts = decryptedMessage.split("\\|", 3);
+
+        if (parts.length == 3) {
+            try {
+                String username = parts[0];
+
+                LocalDateTime timestamp = LocalDateTime.parse(parts[1]);
+
+                String content = parts[2];
+
+                return new TextMessage(username, content, timestamp);
+            } catch (Exception e) {
+                System.err.println("Failed to parse message content: " + decryptedMessage);
+                return null;
+            }
+        }
+        return null;
+    }
+
     public String serialize(){
         return "MSG:" + username + ":" + content;
     }

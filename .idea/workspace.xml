@@ -5,24 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7febb996-4861-4739-beb1-eb08210254a4" name="Changes" comment="extracted network commands into a new service package. autoinjected. overall better OOP">
-      <change afterPath="$PROJECT_DIR$/src/main/java/core/TypingIndicator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/TYPING.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/ChatWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UI/ChatWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/SettingsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UI/SettingsWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/WindowManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UI/WindowManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/core/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/core/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/core/SystemMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/core/SystemMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Messages.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/UI/ChatWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UI/ChatWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/core/TextMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/core/TextMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/database/IMessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/IMessageRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/database/MessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/MessageRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/network/Network.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/network/Network.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/Commands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/service/Commands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/netCommands/KILL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/KILL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/netCommands/MSG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/MSG.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/netCommands/OK.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/OK.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/netCommands/SYS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/SYS.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +42,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/MorisFili/ChatAppGrupp6.git&quot;,
-    &quot;accountId&quot;: &quot;9d10634c-6134-4b32-a212-ed268a19fd3d&quot;
+    &quot;accountId&quot;: &quot;d9849d93-5855-4330-90b9-5a54c0d21ab4&quot;
   },
   &quot;editorReviewEnabled&quot;: false
 }</component>
@@ -77,6 +65,8 @@
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Application.Main.executor": "Run",
     "Maven.ChatAppGrupp6 [javafx:run].executor": "Run",
+    "Maven.Main (1).executor": "Run",
+    "Maven.Main (2).executor": "Run",
     "Maven.Main.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -96,7 +86,67 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Maven.Main (2)">
+    <configuration name="Main (1)" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="javafx:run" />
+              </list>
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="Main (2)" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="javafx:run" />
+              </list>
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
     <configuration name="Main" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -127,6 +177,11 @@
       </MavenSettings>
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Maven.Main" />
+      <item itemvalue="Maven.Main (1)" />
+      <item itemvalue="Maven.Main (2)" />
+    </list>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -207,5 +262,15 @@
     <MESSAGE value="encryption, save, delete" />
     <MESSAGE value="extracted network commands into a new service package. autoinjected. overall better OOP" />
     <option name="LAST_COMMIT_MESSAGE" value="extracted network commands into a new service package. autoinjected. overall better OOP" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.IllegalArgumentException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
