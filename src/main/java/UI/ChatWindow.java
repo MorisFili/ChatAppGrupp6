@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class ChatWindow {
 
     private final WindowManager windowManager;
+    private final PopupWindow popupWindow;
     public static ChatWindow instance; // Singleton instance
     private IMessageRepository repository;
     private final Scene scene;
@@ -53,6 +54,7 @@ public class ChatWindow {
     public ChatWindow(WindowManager windowManager) {
         this.windowManager = windowManager;
         instance = this;
+        popupWindow = new PopupWindow();
 
         mainBody = new TextFlow();
         mainBody.setPadding(new Insets(5, 0, 5, 3));
@@ -121,6 +123,11 @@ public class ChatWindow {
                     for (Node n : newMsg.getAddedSubList()) {
                         if (n instanceof TypingIndicator) continue;
                         messageSound.play();
+                        if (!windowManager.getStage().isFocused() || windowManager.getStage().isIconified()){
+                            if (n instanceof TextMessage textMessage) {
+                                popupWindow.showPopup(textMessage, windowManager.getStage());
+                            }
+                        }
                     }
                 }
             }

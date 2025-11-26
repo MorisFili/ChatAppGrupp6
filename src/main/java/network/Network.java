@@ -110,7 +110,7 @@ public class Network {
             String line;
             while ((line = in.readLine()) != null) {
 
-                if (line.startsWith("OK")){
+                if (line.startsWith("OK")) {
                     String[] args = line.split(":", 3);
                     if (userSession.getUsername().equals(args[1])) continue;
                     if (getConnections().containsKey(args[1])) continue;
@@ -133,11 +133,7 @@ public class Network {
     }
 
     public void send(Message msg) {
-        if (msg instanceof TextMessage textMessage){
-            userSession.getChatLog().add(textMessage);
-            chatWindow.getRepository().saveMessage(textMessage);
-            commands.outbound(textMessage);
-        } else commands.outbound(msg);
+        commands.outbound(msg);
     }
 
     public void sendLine(String receiver, String line) {
