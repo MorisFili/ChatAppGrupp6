@@ -1,0 +1,32 @@
+DATUM onsdag 26/11
+
+Inleder mötet med att använda oss av SCRUM-mall
+
+Moris, Hussein och Vehid närvarande.
+
+[För hela gruppen]
+
+1. Vad gjorde jag sedan senaste Daily Scrum?
+
+    Moris - Funktion så att andra kan se om någon annan skriver, relayfunktion,     samt att ljud finns med i programmet
+    Hussein - Har dekrypterat sparade meddelanden. Dessa laddas upp till GUI:n
+    Vehid - Jobba med att kunna ladda upp bilder
+
+2. Vad ska jag göra fram till nästa Daily Scrum?
+
+    Moris - Ska jobba med custom popups
+    Hussein - Lösa buggar
+    Vehid - Fortsatt implementation av bildfunktionen
+
+3. Ser jag några blockerare eller hinder?
+
+    Moris - Behöver mer än en person att testa funktioner
+    Hussein - Buggar gör så att det inte fungerar helt som det ska, behöver lösas
+    -Vehid - Inga blockers
+
+Status på mina tilldelade tasks:
+
+    Moris - Pågående med popups, resten avklarade
+    Hussein - Pågående på uppgifterna
+    Vehid - Pågående
+
