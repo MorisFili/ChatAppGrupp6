@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7febb996-4861-4739-beb1-eb08210254a4" name="Changes" comment="typing indicator, chat message sound">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/default.txt" beforeDir="false" afterPath="$PROJECT_DIR$/default.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/UI/ChatWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UI/ChatWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/service/netCommands/MSG.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/service/netCommands/MSG.java" afterDir="false" />
-    </list>
+    <list default="true" id="7febb996-4861-4739-beb1-eb08210254a4" name="Changes" comment="typing indicator, chat message sound" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
