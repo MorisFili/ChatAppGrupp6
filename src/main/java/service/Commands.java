@@ -17,7 +17,7 @@ public class Commands {
 
     @Command KILL kill;
     @Command MSG msg;
-    @Command OK ok;
+    @Command public RELAY relay;
     @Command SYS sys;
     @Command TYPING typing;
 
@@ -34,7 +34,7 @@ public class Commands {
             case "KILL" -> kill.in(line);
             case "SYS" -> sys.in(line);
             case "MSG" -> msg.in(line);
-            case "OK" -> ok.in(line);
+            case "RELAY" -> relay.in(line);
             case "TYPING" -> typing.in(line);
         }
     }

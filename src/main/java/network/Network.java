@@ -2,6 +2,7 @@ package network;
 
 import UI.ChatWindow;
 import core.Message;
+import core.SystemMessage;
 import core.TextMessage;
 import javafx.application.Platform;
 import service.Commands;
@@ -35,11 +36,10 @@ public class Network {
         this.commands = new Commands(this);
     }
 
-    // Connecta till server enl uppgifterna från settingwindow
-    public void connect() {
+    public void connect(String IP, int PORT) {
         threadPool.submit(() -> {
             try {
-                Socket socket = new Socket(userSession.getIp(), userSession.getTargetPort());
+                Socket socket = new Socket(IP, PORT);
                 System.out.println("Successfully connected to: " + userSession.getIp() + ":" + userSession.getTargetPort());
                 threadPool.submit(() -> socketHandler(socket));
             } catch (IOException e) {
@@ -105,16 +105,22 @@ public class Network {
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
 
 
-            out.println("OK:" + userSession.getUsername());
+            out.println("OK:" + userSession.getUsername() + ":" + userSession.getListenerPort());
 
             String line;
             while ((line = in.readLine()) != null) {
-                String[] args = line.split(":");
-                if (args[0].equals("OK")){
+
+                if (line.startsWith("OK")){
+                    String[] args = line.split(":", 3);
+                    if (userSession.getUsername().equals(args[1])) continue;
+                    if (getConnections().containsKey(args[1])) continue;
                     getPeers().put(args[1], out);
                     getConnections().put(args[1], socket);
+                    Platform.runLater(() -> chatWindow.getMainBody().getChildren().add(new SystemMessage(args[1], "has connected.")));
+                    commands.relay.out(socket.getInetAddress().getHostAddress(), Integer.parseInt(args[2]));
                 }
 
+                String[] args = line.split(":");
                 String finalLine = line;
                 commands.getCommands().stream().filter(x -> x.getCmd().equals(args[0])).findFirst().ifPresent(x -> commands.inbound(finalLine));
             }

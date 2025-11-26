@@ -16,7 +16,7 @@ public class KILL extends netCommand {
     public void in(String line) {
         String[] args = line.split(":",2);
         String username = network.getUserSession().getUsername();
-        String content = (" was kicked by " + args[1]);
+        String content = ("was kicked by " + args[1]);
         SystemMessage systemMessage = new SystemMessage(username, content);
         out(systemMessage);
         network.terminateNetwork();
