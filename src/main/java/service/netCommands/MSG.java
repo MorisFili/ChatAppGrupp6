@@ -22,14 +22,12 @@ public class MSG extends netCommand {
         TextMessage message = new TextMessage(username, content);
 
         network.getUserSession().getChatLog().add(message);
-        network.getChatWindow().getRepository().saveMessage(message);
         Platform.runLater(() -> network.getChatWindow().getMainBody().getChildren().add(message));
     }
 
     @Override
     public void out(Message msg) {
         network.getUserSession().getChatLog().add((TextMessage) msg);
-        network.getChatWindow().getRepository().saveMessage((TextMessage) msg);
         for (PrintWriter pw : network.getPeers().values()) {
             pw.println(msg.serialize());
         }
