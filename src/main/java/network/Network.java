@@ -133,11 +133,7 @@ public class Network {
     }
 
     public void send(Message msg) {
-        if (msg instanceof TextMessage textMessage){
-            userSession.getChatLog().add(textMessage);
-            chatWindow.getRepository().saveMessage(textMessage);
-            commands.outbound(textMessage);
-        } else commands.outbound(msg);
+        commands.outbound(msg);
     }
 
     public void sendLine(String receiver, String line) {
