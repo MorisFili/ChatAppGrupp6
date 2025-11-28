@@ -1,6 +1,13 @@
 package UI;
 
-import core.Message;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import core.ImageMessage;
+import core.TextMessage;
 import core.TypingIndicator;
 import database.IMessageRepository;
 import database.MessageRepository;
@@ -16,18 +23,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.AudioClip;
 import javafx.scene.text.TextFlow;
-import core.TextMessage;
 import network.Network;
 import network.UserSession;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 
 public class ChatWindow {
 
@@ -37,6 +35,7 @@ public class ChatWindow {
     private IMessageRepository repository;
     private final Scene scene;
     private final Button send;
+    private final Button imageButton;
     private final TextArea inputText;
     private final TextFlow mainBody;
     private UserSession userSession;
@@ -47,9 +46,6 @@ public class ChatWindow {
     private boolean lastStateSent = false;
     private boolean inputEmpty = true;
     Map<String, TypingIndicator> indicators = new HashMap<>();
-
-    AudioClip messageSound = new AudioClip(getClass().getResource("/notification.mp3").toExternalForm());
-
 
     public ChatWindow(WindowManager windowManager) {
         this.windowManager = windowManager;
@@ -66,12 +62,14 @@ public class ChatWindow {
         inputText.setWrapText(true);
         inputText.setPrefRowCount(1);
 
-
         send = new Button(">");
         send.setMinSize(40, 60);
         send.setDefaultButton(true);
 
-        HBox bottomAlignment = new HBox(inputText, send);
+        imageButton = new Button("📷");
+        imageButton.setMinSize(40, 60);
+
+        HBox bottomAlignment = new HBox(inputText, send, imageButton);
         HBox.setHgrow(inputText, Priority.ALWAYS);
 
         VBox root = new VBox(scrollPane, bottomAlignment);
@@ -85,9 +83,8 @@ public class ChatWindow {
 
     public void listenerSetup() {
 
-        // Send
         send.setOnAction(x -> {
-            if (inputText.getText().isEmpty()){
+            if (inputText.getText().isEmpty()) {
                 x.consume();
                 return;
             }
@@ -104,7 +101,20 @@ public class ChatWindow {
             inputText.clear();
         });
 
-        // Text area interceptor för 'enter'
+        imageButton.setOnAction(x -> {
+            javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+            fileChooser.getExtensionFilters().add(
+                new javafx.stage.FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
+            );
+            java.io.File file = fileChooser.showOpenDialog(windowManager.getStage());
+            if (file != null) {
+                ImageMessage msg = new ImageMessage(userSession.getUsername(), file);
+                mainBody.getChildren().add(msg);
+                mainBody.getChildren().add(msg.getImageView());
+                network.send(msg);
+            }
+        });
+
         inputText.addEventFilter(KeyEvent.KEY_PRESSED, x -> {
             if (x.getCode() == KeyCode.ENTER && !x.isShiftDown()) {
                 if (inputText.getText().isEmpty()) {
@@ -116,14 +126,12 @@ public class ChatWindow {
             }
         });
 
-        // Incoming text listener
         mainBody.getChildren().addListener((ListChangeListener<Node>) newMsg -> {
             while (newMsg.next()) {
                 if (newMsg.wasAdded()) {
                     for (Node n : newMsg.getAddedSubList()) {
                         if (n instanceof TypingIndicator) continue;
-                        messageSound.play();
-                        if (!windowManager.getStage().isFocused() || windowManager.getStage().isIconified()){
+                        if (!windowManager.getStage().isFocused() || windowManager.getStage().isIconified()) {
                             if (n instanceof TextMessage textMessage) {
                                 popupWindow.showPopup(textMessage, windowManager.getStage());
                             }
@@ -133,21 +141,21 @@ public class ChatWindow {
             }
         });
 
-        // Typing indicator
         inputText.textProperty().addListener((obs, old, newV) -> {
             inputEmpty = newV.isEmpty();
             lastTyped = System.currentTimeMillis();
         });
+
         timer.scheduleAtFixedRate(() -> {
             long now = System.currentTimeMillis();
             boolean typing = !inputEmpty && (now - lastTyped < 2000);
 
-            if (typing && !lastStateSent){
+            if (typing && !lastStateSent) {
                 lastStateSent = true;
                 network.send(new TypingIndicator(userSession.getUsername(), true));
             }
 
-            if (!typing && lastStateSent){
+            if (!typing && lastStateSent) {
                 lastStateSent = false;
                 network.send(new TypingIndicator(userSession.getUsername(), false));
             }

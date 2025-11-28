@@ -1,15 +1,21 @@
 package service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import core.ImageMessage;
 import core.Message;
 import core.SystemMessage;
 import core.TextMessage;
 import core.TypingIndicator;
 import network.Network;
-import service.netCommands.*;
+import service.netCommands.KILL;
+import service.netCommands.MSG;
+import service.netCommands.RELAY;
+import service.netCommands.SYS;
+import service.netCommands.TYPING;
+import service.netCommands.netCommand;
 import utils.AutoInject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Commands {
 
@@ -40,9 +46,13 @@ public class Commands {
     }
 
     public void outbound(Message message){
-        if (message instanceof TextMessage textMessage) msg.out(textMessage);
-        if (message instanceof SystemMessage systemMessage) sys.out(systemMessage);
-        if (message instanceof TypingIndicator typingIndicator) typing.out(typingIndicator);
+        if (message instanceof TextMessage || message instanceof ImageMessage) {
+            msg.out(message);
+        } else if (message instanceof SystemMessage systemMessage) {
+            sys.out(systemMessage);
+        } else if (message instanceof TypingIndicator typingIndicator) {
+            typing.out(typingIndicator);
+        }
     }
 
 

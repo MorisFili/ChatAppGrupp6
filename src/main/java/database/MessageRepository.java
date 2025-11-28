@@ -1,16 +1,17 @@
 package database;
 
-import UI.ChatWindow;
-import core.TextMessage;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
+import UI.ChatWindow;
+import core.TextMessage;
 
 
 public class MessageRepository implements IMessageRepository {

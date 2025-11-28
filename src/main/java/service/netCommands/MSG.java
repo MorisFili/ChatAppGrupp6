@@ -1,11 +1,11 @@
 package service.netCommands;
 
-import core.Message;
-import javafx.application.Platform;
-import core.TextMessage;
-import network.Network;
-
 import java.io.PrintWriter;
+
+import core.Message;
+import core.TextMessage;
+import javafx.application.Platform;
+import network.Network;
 
 public class MSG extends netCommand {
 

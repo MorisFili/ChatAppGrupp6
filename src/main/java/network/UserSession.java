@@ -1,10 +1,10 @@
 package network;
 
-import core.TextMessage;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import core.TextMessage;
 
 public class UserSession {
 
