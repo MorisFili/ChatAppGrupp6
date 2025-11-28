@@ -90,7 +90,6 @@ public class SettingsWindow {
 
 
                     windowManager.getChatWindow().wireNetwork(network);
-                    windowManager.getChatWindow().initRepo();
 
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid host address format -> " + e.getMessage());

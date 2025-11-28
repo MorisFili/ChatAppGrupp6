@@ -34,8 +34,7 @@ public class MessageRepository implements IMessageRepository {
 
     private final File file;
 
-    public MessageRepository() {
-        String groupName = ChatWindow.instance.getUserSession().getGroup();
+    public MessageRepository(String groupName) {
         this.file = new File(groupName + ".txt");
     }
 

@@ -23,6 +23,7 @@ import network.Network;
 import network.UserSession;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -34,13 +35,13 @@ public class ChatWindow {
     private final WindowManager windowManager;
     private final PopupWindow popupWindow;
     public static ChatWindow instance; // Singleton instance
-    private IMessageRepository repository;
     private final Scene scene;
     private final Button send;
     private final TextArea inputText;
     private final TextFlow mainBody;
     private UserSession userSession;
     private Network network;
+    private IMessageRepository repository;
 
     private final ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
     private long lastTyped = 0;
@@ -156,6 +157,17 @@ public class ChatWindow {
 
     }
 
+    public void loadAndDisplayMessages() {
+        // 1. Load messages from file
+        List<TextMessage> savedMessages = repository.loadMessages();
+
+        // 2. Display messages in GUI and add to chat log
+        for (TextMessage msg : savedMessages) {
+            mainBody.getChildren().add(msg);
+            userSession.getChatLog().add(msg); // Add to the runtime log
+        }
+    }
+
     public void wireNetwork(Network network) {
         this.network = network;
     }
@@ -166,6 +178,8 @@ public class ChatWindow {
 
     public void setUserSession(UserSession userSession) {
         this.userSession = userSession;
+        initRepo();
+        loadAndDisplayMessages();
     }
 
     public UserSession getUserSession() {
@@ -185,7 +199,7 @@ public class ChatWindow {
     }
 
     public void initRepo() {
-        this.repository = new MessageRepository();
+        this.repository = new MessageRepository(userSession.getGroup());
     }
 
     public TextArea getInputText() {

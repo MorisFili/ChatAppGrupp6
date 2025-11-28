@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7febb996-4861-4739-beb1-eb08210254a4" name="Changes" comment="connection relay added for true p2p decentralization" />
+    <list default="true" id="7febb996-4861-4739-beb1-eb08210254a4" name="Changes" comment="connection relay added for true p2p decentralization">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/UI/ChatWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UI/ChatWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/UI/SettingsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UI/SettingsWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/database/MessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/MessageRepository.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -63,7 +68,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "#20 on GUI-Branch",
+    "git-widget-placeholder": "database-setup",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
