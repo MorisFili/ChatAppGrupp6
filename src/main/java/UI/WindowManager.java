@@ -28,4 +28,8 @@ public class WindowManager {
     public ChatWindow getChatWindow() {
         return chatWindow;
     }
+
+    public Stage getStage() {
+        return stage;
+    }
 }

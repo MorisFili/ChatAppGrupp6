@@ -23,7 +23,6 @@ import network.Network;
 import network.UserSession;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -33,13 +32,13 @@ import java.util.concurrent.TimeUnit;
 public class ChatWindow {
 
     private final WindowManager windowManager;
+    private final PopupWindow popupWindow;
     public static ChatWindow instance; // Singleton instance
     private IMessageRepository repository;
     private final Scene scene;
     private final Button send;
     private final TextArea inputText;
     private final TextFlow mainBody;
-    private final ScrollPane scrollPane;
     private UserSession userSession;
     private Network network;
 
@@ -49,19 +48,19 @@ public class ChatWindow {
     private boolean inputEmpty = true;
     Map<String, TypingIndicator> indicators = new HashMap<>();
 
-    //AudioClip messageSound = new AudioClip(getClass().getResource("/notification.mp3").toExternalForm());
+    AudioClip messageSound = new AudioClip(getClass().getResource("/notification.mp3").toExternalForm());
 
 
     public ChatWindow(WindowManager windowManager) {
         this.windowManager = windowManager;
         instance = this;
+        popupWindow = new PopupWindow();
 
         mainBody = new TextFlow();
         mainBody.setPadding(new Insets(5, 0, 5, 3));
-        scrollPane = new ScrollPane(mainBody);
+        ScrollPane scrollPane = new ScrollPane(mainBody);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
-        scrollPane.vvalueProperty().bind(mainBody.heightProperty());
 
         inputText = new TextArea();
         inputText.setWrapText(true);
@@ -123,7 +122,12 @@ public class ChatWindow {
                 if (newMsg.wasAdded()) {
                     for (Node n : newMsg.getAddedSubList()) {
                         if (n instanceof TypingIndicator) continue;
-                        //messageSound.play();
+                        messageSound.play();
+                        if (!windowManager.getStage().isFocused() || windowManager.getStage().isIconified()){
+                            if (n instanceof TextMessage textMessage) {
+                                popupWindow.showPopup(textMessage, windowManager.getStage());
+                            }
+                        }
                     }
                 }
             }
@@ -150,21 +154,6 @@ public class ChatWindow {
 
         }, 0, 250, TimeUnit.MILLISECONDS);
 
-    }
-
-    public void loadAndDisplayMessages() {
-        if (this.repository == null || this.userSession == null) {
-            System.err.println("Repository or UserSession not initialized.");
-            return;
-        }
-
-        List<TextMessage> messages = this.repository.loadMessages();
-        this.userSession.getChatLog().addAll(messages);
-
-        for (TextMessage message : messages) {
-            mainBody.getChildren().add(message);
-            userSession.getChatLog().add(message);
-        }
     }
 
     public void wireNetwork(Network network) {
@@ -197,7 +186,6 @@ public class ChatWindow {
 
     public void initRepo() {
         this.repository = new MessageRepository();
-        loadAndDisplayMessages();
     }
 
     public TextArea getInputText() {
