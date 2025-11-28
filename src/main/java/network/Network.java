@@ -110,7 +110,7 @@ public class Network {
             String line;
             while ((line = in.readLine()) != null) {
 
-                if (line.startsWith("OK")){
+                if (line.startsWith("OK")) {
                     String[] args = line.split(":", 3);
                     if (userSession.getUsername().equals(args[1])) continue;
                     if (getConnections().containsKey(args[1])) continue;
